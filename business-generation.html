@@ -195,8 +195,12 @@ td.none{color:var(--muted);font-size:12px}
 .fold details[open] .chev{transform:rotate(-135deg);margin-top:4px}
 .fold details[open] summary{border-bottom:1px solid var(--line);border-radius:12px 12px 0 0}
 .fold.sm summary{padding:10px 20px}
-.fold.lite summary h2{font-size:15px;font-weight:400}
-.fold.lite summary .eyebrow{font-weight:400;font-size:11px}
+.fold.lite summary{padding:6px 14px}
+.fold.lite summary h2{font-size:13px;font-weight:400;line-height:1.35}
+.fold.lite summary .eyebrow{font-weight:400;font-size:10px;letter-spacing:.04em}
+.fold.lite .chev{width:7px;height:7px;border-width:0 1.5px 1.5px 0}
+.fold.lite details,.fold.lite summary{border-radius:8px}
+.fold.lite + .fold.lite{margin-top:-38px}
 .fold.lite .sum-text{gap:0}
 .fold-body{padding:20px;display:flex;flex-direction:column;gap:16px}
 @media (prefers-reduced-motion:reduce){.chev{transition:none}}
