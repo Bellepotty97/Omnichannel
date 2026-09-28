@@ -205,6 +205,64 @@ td.none{color:var(--muted);font-size:12px}
 .fold-body{padding:20px;display:flex;flex-direction:column;gap:16px}
 @media (prefers-reduced-motion:reduce){.chev{transition:none}}
 
+/* NPD */
+.more{font-size:13px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:auto}
+.more:hover{text-decoration:underline}
+.npd{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.npd-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.npd-head .tag{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.npd-ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.seg-btn{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg-btn button,.linkbtn{font:inherit;font-size:13px;border:0;background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer}
+.seg-btn button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+.linkbtn{color:var(--accent);font-weight:600;padding-inline:4px}
+.seg-btn button:focus-visible,.linkbtn:focus-visible,.npd summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.npd-kpi{display:flex;gap:28px;flex-wrap:wrap}
+.npd-kpi div{display:flex;flex-direction:column}
+.npd-kpi b{font-family:var(--mono);font-size:24px;font-variant-numeric:tabular-nums}
+.npd-kpi span{font-size:12px;color:var(--muted)}
+.npd-years{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;height:120px;padding-top:18px;border-bottom:1px solid var(--line)}
+.yb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}
+.yb i{display:block;width:60%;max-width:44px;background:var(--mc);border-radius:3px 3px 0 0}
+.yb b{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
+.yl{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:-10px}
+.npd-list{display:flex;flex-direction:column;gap:4px}
+.npd details{border-radius:8px}
+.npd details[open]{background:var(--bg)}
+.npd summary{list-style:none;cursor:pointer;border-radius:8px}
+.npd summary::-webkit-details-marker{display:none}
+.npd summary:hover{background:var(--bg)}
+.row2{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr) 5.5rem;gap:12px;align-items:center;padding:7px 10px}
+.row2 .nm{font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center;min-width:0}
+.row2 .nm .cv{flex:none;width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(-45deg);transition:transform .15s}
+.npd details[open] .cv{transform:rotate(45deg)}
+.row2 .nm small{white-space:nowrap;font-weight:400;color:var(--muted);font-size:11px}
+.track{height:12px;background:var(--line);border-radius:3px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--mc);border-radius:3px}
+.row2 .v{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.row2.zero .nm,.row2.zero .v{color:var(--muted);font-weight:400}
+.types{padding:2px 0 10px 22px;display:flex;flex-direction:column;gap:2px}
+.types .row2{padding:5px 10px}
+.types .row2 .nm{font-weight:500;font-size:12.5px}
+.types .track{height:8px}
+.types .v{font-size:12px}
+.badge{flex:none;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 5px;line-height:1.6}
+.yr7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font-family:var(--mono);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 0 4px 12px}
+.yr7 span{text-align:center}
+.yr7 b{display:block;color:var(--ink);font-weight:500}
+.fold .npd details,.fold .npd details[open]{border:0;border-radius:8px}
+.fold .npd summary,.fold .npd details[open] summary{display:block;padding:0;border:0;border-radius:8px}
+.fold .npd details[open]{background:var(--bg)}
+.yr7{grid-column:2/3}
+.npd{--mc:var(--accent)}
+.npd.po{--mc:var(--bar)}
+@media (max-width:640px){
+  .row2{grid-template-columns:minmax(0,1fr) 4.5rem}
+  .row2 .track{grid-column:1/-1;grid-row:2}
+  .yr7{font-size:9.5px;padding-left:0;grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){.row2 .nm .cv{transition:none}}
+
 footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
 
 @media (max-width:820px){
@@ -295,7 +353,28 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <span class="tag">A3 · Product</span>
       <h3>เพิ่ม New Product เป็น New Opportunity</h3>
       <p>ขยาย Product List ผ่าน Product Platform และ Complementor เพื่อเปิดโอกาสขายใหม่</p>
+      <a class="more" href="#npd">ดูรายการ New Product (NPD) ↓</a>
     </div>
+  </div>
+  <div class="npd" id="npd">
+    <div class="npd-head">
+      <div>
+        <span class="tag">A3 · Product · New Product (NPD)</span>
+        <h3>New Product ในสาย Omni Channel</h3>
+        <p class="note">จากไฟล์ NPD_Omni · กรอง Revenue Stream Type = 2. Omni Channel, Status of Product = New · ปี 2027–2033 (พ.ศ. 2570–2576) · หน่วย ล้านบาท (mb)</p>
+      </div>
+      <div class="npd-ctl">
+        <div class="seg-btn" role="group" aria-label="เลือกตัวเลข">
+          <button type="button" id="m-gp" aria-pressed="true">GP</button>
+          <button type="button" id="m-po" aria-pressed="false">PO Receive</button>
+        </div>
+        <button type="button" class="linkbtn" id="npd-all">กางทั้งหมด</button>
+      </div>
+    </div>
+    <div class="npd-kpi" id="npd-kpi"></div>
+    <div class="npd-years" id="npd-years" aria-label="รวมรายปี"></div>
+    <div class="npd-list" id="npd-list"></div>
+    <p class="note">คลิกชื่อ Product Category เพื่อกางดู Product Type · ป้าย NPD = Status of Product "New" ตามไฟล์ (ทุกรายการในตัวกรองนี้เป็น New) · แท่งยาวตามยอดรวม 7 ปี</p>
   </div>
   <div class="ksf">
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -492,3 +571,48 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 <footer>อ้างอิง: Omni Channel — มุมมองอย่างย่อ (Gartner DBTP) และ Omni Channel Platform – Business Generation · รายละเอียด Capability / Activity ดูได้ใน RST Architecture Studio</footer>
 
 </div>
+<script>
+(function(){
+  var DATA=[{"n":"Compact substation","t":[{"n":"Modular Substation Solution","po":[52.95,null,null,null,null,null,null],"gp":[12.24,null,null,null,null,null,null]},{"n":"Prefabricated e-house Solution","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]},{"n":"Unit Substation","po":[4.74,null,null,null,null,null,null],"gp":[1.1,null,null,null,null,null,null]},{"n":"Unit substation 24kV 500 - 1000 kVA","po":[null,31.41,39.5,41.57,49.3,51.59,54.1],"gp":[null,6.54,8.13,8.71,11.91,11.91,11.91]}]},{"n":"Distribution Transformer","t":[{"n":"3 Phase Distribution Transformer Bio base","po":[1.96,1.96,null,null,null,null,null],"gp":[0.36,0.2,null,null,null,null,null]},{"n":"3 Phase Distribution Transformer Dry cast","po":[5.89,5.89,5.84,5.84,3.7,3.87,4.06],"gp":[1.07,0.6,0.59,0.62,0.83,0.83,0.83]}]},{"n":"Fuse","t":[{"n":"Fuse Switches Disconnectors","po":[31.45,null,null,null,null,null,null],"gp":[8.02,null,null,null,null,null,null]}]},{"n":"GIS SF6-free","t":[{"n":"115kV GIS SF6-free","po":[0,0,56.75,59.27,66.56,69.64,73.03],"gp":[0,0,17.34,18.07,16.48,16.48,16.48]},{"n":"24kV GIS SF6-free","po":[0,0,0,0,0,0,0],"gp":[0,0,0,0,0,0,0]},{"n":"36kV GIS SF6-free","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Instrument Transformer (Dry Type)","t":[{"n":"VT Outdoor Power supply VExL-24,VExL-36","po":[2.09,1.29,1.44,1.5,1.33,1.35,1.37],"gp":[0.96,0.26,0.28,0.29,0.28,0.28,0.28]}]},{"n":"Instrument Transformer (Oil Type)","t":[{"n":"CT 115","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]},{"n":"VT 115","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"LBS SF6-free","t":[{"n":"115kV SF6-free","po":[0,0,0,0,0,0,0],"gp":[0,0,0,0,0,0,0]}]},{"n":"LED Products & system","t":[{"n":"LED street lights 2x20W","po":[23.55,null,null,null,null,null,null],"gp":[7.21,null,null,null,null,null,null]},{"n":"LED street lights 94W","po":[25.36,30.53,null,null,null,null,null],"gp":[5.18,5.69,null,null,null,null,null]},{"n":"Photo switch 220V 30A","po":[3.94,null,null,null,null,null,null],"gp":[0.8,null,null,null,null,null,null]}]},{"n":"Load Break Switch","t":[{"n":"24kV Solid Load Break Switch","po":[32.09,98.04,null,null,null,null,null],"gp":[10.29,22.86,null,null,null,null,null]},{"n":"36kV Solid Load Break Switch","po":[6.84,18.37,19.49,20.03,15.26,15.96,16.74],"gp":[1.83,3.99,4.25,4.44,3.97,3.97,3.97]}]},{"n":"Low Voltage Switchboard","t":[{"n":"IOT Transformer Box","po":[4.93,null,null,null,null,null,null],"gp":[1.43,null,null,null,null,null,null]}]},{"n":"Recloser","t":[{"n":"24kV Solid Recloser","po":[10.77,19.04,23.14,23.41,15.05,15.75,16.51],"gp":[3.16,3.92,4.52,4.76,4.3,4.3,4.3]},{"n":"36kV Solid Recloser","po":[0,3.64,3.79,3.87,2.71,2.83,2.97],"gp":[0,0.73,0.8,0.84,0.7,0.7,0.7]}]},{"n":"Solid Ring Main Unit","t":[{"n":"24kV Solid Ring Main Unit (SRMU)","po":[4.44,9.47,9.46,9.88,11.09,11.61,12.17],"gp":[1.11,2.7,2.89,3.01,2.75,2.75,2.75]},{"n":"36kV Solid Ring Main Unit (SRMU)","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Solution On Demand & Service","t":[{"n":"IOT Transformer Box","po":[null,7.17,7.73,8.06,6.16,6.45,6.76],"gp":[null,1.39,1.45,1.53,1.49,1.49,1.49]}]},{"n":"Switch Capacitor","t":[{"n":"24kV Switch Capacitor","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Switchboard","t":[{"n":"MDB Distribution Board(Type test)","po":[null,23.79,23.97,25.32,24.65,25.79,27.05],"gp":[null,5.14,4.9,5.3,5.96,5.96,5.96]}]}];
+  var YEARS=[2027,2028,2029,2030,2031,2032,2033];
+  var metric='gp';
+  var root=document.getElementById('npd');
+  var sum=function(a){return a.reduce(function(s,v){return s+(v||0)},0)};
+  var f1=function(v){return v==null?'–':(Math.round(v*10)/10).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})};
+  var esc=function(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')};
+  function catYears(c,m){return YEARS.map(function(_,i){var any=false,s=0;c.t.forEach(function(t){if(t[m][i]!=null){any=true;s+=t[m][i]}});return any?s:null})}
+  function render(){
+    root.classList.toggle('po',metric==='po');
+    var open={};root.querySelectorAll('#npd-list details').forEach(function(d){if(d.open)open[d.dataset.k]=1});
+    var cats=DATA.map(function(c){var y=catYears(c,metric);return {c:c,y:y,tot:sum(y)}}).sort(function(a,b){return b.tot-a.tot});
+    var max=Math.max.apply(null,cats.map(function(x){return x.tot}))||1;
+    var yrTot=YEARS.map(function(_,i){return sum(cats.map(function(x){return x.y[i]}))});
+    var other=metric==='gp'?'po':'gp';
+    var totO=sum(DATA.map(function(c){return sum(catYears(c,other))}));
+    var nTypes=0,nZero=0;DATA.forEach(function(c){c.t.forEach(function(t){nTypes++;if(sum(t[metric])===0&&sum(t[other])===0)nZero++})});
+    document.getElementById('npd-kpi').innerHTML=
+      '<div><b>'+f1(sum(yrTot))+'</b><span>'+(metric==='gp'?'GP':'PO Receive')+' รวม 7 ปี (mb)</span></div>'+
+      '<div><b>'+f1(totO)+'</b><span>'+(metric==='gp'?'PO Receive':'GP')+' รวม 7 ปี (mb)</span></div>'+
+      '<div><b>'+DATA.length+' / '+nTypes+'</b><span>Product Category / Product Type (NPD)</span></div>'+
+      '<div><b>'+nZero+'</b><span>Type ที่ยังไม่มีตัวเลข</span></div>';
+    var ym=Math.max.apply(null,yrTot)||1;
+    document.getElementById('npd-years').innerHTML=yrTot.map(function(v){return '<div class="yb"><b>'+f1(v)+'</b><i style="height:'+(v/ym*80).toFixed(1)+'%"></i></div>'}).join('');
+    var yl=root.querySelector('.yl');if(!yl){yl=document.createElement('div');yl.className='yl';document.getElementById('npd-years').after(yl)}
+    yl.innerHTML=YEARS.map(function(y){return '<span>'+y+'<br>('+(y+543)+')</span>'}).join('');
+    document.getElementById('npd-list').innerHTML=cats.map(function(x){
+      var types=x.c.t.map(function(t){return {t:t,tot:sum(t[metric])}}).sort(function(a,b){return b.tot-a.tot});
+      var z=x.tot===0?' zero':'';
+      return '<details data-k="'+esc(x.c.n)+'"'+(open[x.c.n]?' open':'')+'><summary><div class="row2'+z+'"><span class="nm"><span class="cv"></span>'+esc(x.c.n)+' <small>'+x.c.t.length+' type</small></span><span class="track"><i style="width:'+(x.tot/max*100).toFixed(1)+'%"></i></span><span class="v">'+f1(x.tot)+'</span></div></summary><div class="types">'+
+        types.map(function(tt){var t=tt.t;var z2=tt.tot===0?' zero':'';
+          return '<div class="row2'+z2+'"><span class="nm"><span class="badge">NPD</span>'+esc(t.n)+'</span><span class="track"><i style="width:'+(tt.tot/max*100).toFixed(1)+'%"></i></span><span class="v">'+f1(tt.tot)+'</span>'+
+            '<div class="yr7">'+YEARS.map(function(y,i){return '<span>'+String(y).slice(2)+'<b>'+f1(t[metric][i])+'</b></span>'}).join('')+'</div></div>'}).join('')+
+        '</div></details>'}).join('');
+  }
+  function setM(m){metric=m;document.getElementById('m-gp').setAttribute('aria-pressed',m==='gp');document.getElementById('m-po').setAttribute('aria-pressed',m==='po');render()}
+  document.getElementById('m-gp').addEventListener('click',function(){setM('gp')});
+  document.getElementById('m-po').addEventListener('click',function(){setM('po')});
+  var allBtn=document.getElementById('npd-all');
+  allBtn.addEventListener('click',function(){var ds=root.querySelectorAll('#npd-list details');var anyClosed=[].some.call(ds,function(d){return !d.open});ds.forEach(function(d){d.open=anyClosed});allBtn.textContent=anyClosed?'หุบทั้งหมด':'กางทั้งหมด'});
+  render();
+})();
+</script>
