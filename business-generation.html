@@ -295,6 +295,28 @@ td.none{color:var(--muted);font-size:12px}
 .wheel .wc{fill:var(--ink);font:700 15px var(--font);text-anchor:middle}
 .wheel .wl{fill:var(--ink);font:500 13px var(--font)}
 
+/* stakeholder links */
+.dbtp{position:relative}
+.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6;overflow:visible}
+.links path{fill:none;stroke-width:2.5;stroke-linecap:round}
+.links circle{stroke:var(--surface);stroke-width:2}
+.linkbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lb-label{font-size:13px;color:var(--muted)}
+.linkbar button{font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:5px 12px;cursor:pointer}
+.linkbar button i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.linkbar button[aria-pressed="true"]{border-color:var(--c,var(--ink));box-shadow:inset 0 0 0 1px var(--c,var(--ink));font-weight:600}
+.linkbar button:focus-visible,.box[role="button"]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lb-off{color:var(--muted)!important}
+.lb-why{margin-top:-6px}
+.box[role="button"]{cursor:pointer;transition:opacity .2s,box-shadow .2s}
+.box[aria-pressed="true"]{box-shadow:0 0 0 2px var(--c)}
+.dbtp.linking .box[aria-pressed="false"]{opacity:.45}
+.ring{transition:opacity .2s,box-shadow .2s}
+.dbtp.linking .ring:not(.hit){opacity:.35}
+.dbtp.linking .ring.hit{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--rc)}
+.dbtp.linking .r-da.hit{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--da-ring)}
+@media (prefers-reduced-motion:reduce){.box[role="button"],.ring{transition:none}}
+
 footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
 
 @media (max-width:820px){
@@ -423,17 +445,29 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 <section>
   <div class="eyebrow">Omni Channel — มุมมองอย่างย่อ (Gartner DBTP)</div>
   <h2>องค์ประกอบ Platform 5 ห่วง</h2>
+  <div class="linkbar" role="group" aria-label="แสดงเส้นเชื่อมโยง Stakeholder กับห่วง">
+    <span class="lb-label">เส้นเชื่อมโยง:</span>
+    <button type="button" data-show="all" aria-pressed="false">ทั้งหมด</button>
+    <button type="button" data-show="eu" style="--c:var(--cx)" aria-pressed="false"><i></i>End User</button>
+    <button type="button" data-show="comp" style="--c:#B8860B" aria-pressed="false"><i></i>Complementor</button>
+    <button type="button" data-show="admin" style="--c:var(--muted)" aria-pressed="false"><i></i>Platform Admin</button>
+    <button type="button" data-show="cm" style="--c:#C0392B" aria-pressed="false"><i></i>Channel Member</button>
+    <button type="button" data-show="sale" style="--c:#12846F" aria-pressed="false"><i></i>Sale/KA</button>
+    <button type="button" data-show="none" class="lb-off">ซ่อนเส้น</button>
+  </div>
+  <p class="note lb-why" id="lb-why" aria-live="polite">กดปุ่มหรือคลิกกล่อง Stakeholder เพื่อดูว่าเชื่อมกับห่วงไหน</p>
   <div class="dbtp">
+    <svg class="links" id="links" aria-hidden="true"></svg>
     <div class="side">
-      <div class="box" style="--c:var(--cx)">
+      <div class="box" style="--c:var(--cx)" data-sh="eu" role="button" tabindex="0" aria-pressed="false">
         <h3>End User</h3>
         <ul><li>เป็นผู้ใช้งานตรง : Customer Engagement Platform</li><li>ดูData Product/Catalog</li><li>ซื้อของตรงผ่าน PEM105 หรือ Channel Member</li></ul>
       </div>
-      <div class="box" style="--c:#B8860B">
+      <div class="box" style="--c:#B8860B" data-sh="comp" role="button" tabindex="0" aria-pressed="false">
         <h3>Complementor / พันธมิตรเสริม</h3>
         <ul><li>MiT · สมอ. · Testing Lab · Certification Body</li><li>Data ประกอบการขายและเข้างาน : Catalog &amp; Product Platform</li><li>ไม่ใช่ Stakeholder หลักที่เข้ามาใช้งาน Platform</li></ul>
       </div>
-      <div class="box" style="--c:var(--muted)">
+      <div class="box" style="--c:var(--muted)" data-sh="admin" role="button" tabindex="0" aria-pressed="false">
         <h3>Platform Admin</h3>
         <ul><li>ทีม IT / Cyber Security</li></ul>
       </div>
@@ -444,21 +478,21 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <header><b>Omni Channel Platform</b><span>1 มือถือ = 1 Platform · ข้างในคือ 5 ห่วง DBTP</span></header>
       <div class="screen">
         <div class="rings">
-          <div class="ring r-cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><a class="nw ring-link" href="https://bellepotty97.github.io/CDX/products.html?core=Distribution+Transformer" target="_blank" rel="noopener" title="เปิด Customer Engagement Platform">Customer Engagement Platform ↗</a><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
-          <div class="ring r-eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span><a class="ring-link eco-link" href="https://claude.ai/artifact/8Wx69dHwpNFMPAMBqoQdQv" target="_blank" rel="noopener" title="เปิด Channel Member">Channel Member Management ↗</a><br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
-          <div class="ring r-iot"><b>IoT</b><small>อุปกรณ์ · เซ็นเซอร์ · หน่วยงาน</small><span>ส่งต่อ Insight/Lead ให้ทีมขาย RVT อื่นไปปิดการขายในสาย Revenue ของตนเองได้</span></div>
-          <div class="ring r-is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span><a class="ring-link is-link" href="#crm" id="crm-open" title="ดูรายละเอียด CRM">(BG) Customer Relationship Management /CRM ↗</a><br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
-          <div class="ring r-da"><b>Data &amp; Analytics</b><small>ข้อมูลและการวิเคราะห์ (ศูนย์กลาง)</small><span class="da-list"><span><a class="ring-link da-link" href="https://jetniphat400.github.io/sale_forecast/" target="_blank" rel="noopener" title="เปิด Sale Forecasting">Sale Forecasting for Chase Sale Operation ↗</a></span><span>Near Real time Inventory &amp; Lead time</span><span>AI Chatbot</span><span>Inventory Max-Min Stock</span><span>Bid-Product Mapping</span><span>Recurring Analysis</span></span></div>
+          <div class="ring r-cx" data-ring="cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><a class="nw ring-link" href="https://bellepotty97.github.io/CDX/products.html?core=Distribution+Transformer" target="_blank" rel="noopener" title="เปิด Customer Engagement Platform">Customer Engagement Platform ↗</a><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
+          <div class="ring r-eco" data-ring="eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span><a class="ring-link eco-link" href="https://claude.ai/artifact/8Wx69dHwpNFMPAMBqoQdQv" target="_blank" rel="noopener" title="เปิด Channel Member">Channel Member Management ↗</a><br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
+          <div class="ring r-iot" data-ring="iot"><b>IoT</b><small>อุปกรณ์ · เซ็นเซอร์ · หน่วยงาน</small><span>ส่งต่อ Insight/Lead ให้ทีมขาย RVT อื่นไปปิดการขายในสาย Revenue ของตนเองได้</span></div>
+          <div class="ring r-is" data-ring="is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span><a class="ring-link is-link" href="#crm" id="crm-open" title="ดูรายละเอียด CRM">(BG) Customer Relationship Management /CRM ↗</a><br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
+          <div class="ring r-da" data-ring="da"><b>Data &amp; Analytics</b><small>ข้อมูลและการวิเคราะห์ (ศูนย์กลาง)</small><span class="da-list"><span><a class="ring-link da-link" href="https://jetniphat400.github.io/sale_forecast/" target="_blank" rel="noopener" title="เปิด Sale Forecasting">Sale Forecasting for Chase Sale Operation ↗</a></span><span>Near Real time Inventory &amp; Lead time</span><span>AI Chatbot</span><span>Inventory Max-Min Stock</span><span>Bid-Product Mapping</span><span>Recurring Analysis</span></span></div>
         </div>
       </div>
     </div>
 
     <div class="side">
-      <div class="box" style="--c:#C0392B">
+      <div class="box" style="--c:#C0392B" data-sh="cm" role="button" tabindex="0" aria-pressed="false">
         <h3>Channel Member</h3>
         <ul><li>Stakeholder หลัก/ เป้าหมายเพิ่มขึ้นปีละ 5 ราย</li><li>Smartshop · Main Contractor· Dealer</li></ul>
       </div>
-      <div class="box" style="--c:#12846F">
+      <div class="box" style="--c:#12846F" data-sh="sale" role="button" tabindex="0" aria-pressed="false">
         <h3>Precise Business : Sale/KA</h3>
         <ul><li>Target GP 360 mb ปี 2570 ,420 mb ปี 2573</li><li>Business Generation :จะเกี่ยวข้องกับ Sale&amp;KA เป็นหลัก</li><li>กวาด หาโอกาส OI มาจนได้ PO และ GP ตาม Target</li><li>Oppotunity Record &gt;Check Stock Availability&gt; Quotation&gt; Sale Order(CTR) &gt; Demand Satisfaction</li></ul>
       </div>
@@ -694,5 +728,56 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   document.getElementById('crm-close').addEventListener('click',function(){dlg.close?dlg.close():dlg.removeAttribute('open')});
   dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
   if(location.hash==='#crm')openIt();
+})();
+</script>
+<script>
+(function(){
+  var MAP={
+    eu:{rings:['cx','eco'],why:'End User ใช้ Customer Engagement Platform ดู Catalog (Customer Experience) และซื้อผ่าน PEM105 หรือ Channel Member (Ecosystem)'},
+    comp:{rings:['is'],why:'Complementor ให้ข้อมูลประกอบการขายผ่าน Catalog & Product Platform (Information System)'},
+    admin:{rings:['cx','eco','da','iot','is'],why:'Platform Admin (ทีม IT / Cyber Security) ดูแลระบบทุกห่วง'},
+    cm:{rings:['eco','cx','da'],why:'Channel Member ใช้ Ecosystem (สมัคร Dealer, Pricelist, Ordering, Rewarding) ผ่านช่องทาง Customer Experience และใช้ Data เช็ก Stock / Lead time และ AI Chatbot'},
+    sale:{rings:['is','da','iot'],why:'Sale/KA ใช้ Information System (CRM, Lead, Quotation, Sale Order) ใช้ Data ทำ Sale Forecasting และเช็ก Stock และรับ Insight/Lead จาก IoT'}
+  };
+  var wrap=document.querySelector('.dbtp'),svg=document.getElementById('links'),why=document.getElementById('lb-why');
+  if(!wrap||!svg)return;
+  var defWhy=why.textContent,active=[];
+  function draw(){
+    svg.innerHTML='';
+    wrap.classList.toggle('linking',active.length>0);
+    wrap.querySelectorAll('.ring').forEach(function(r){r.classList.remove('hit')});
+    wrap.querySelectorAll('.box').forEach(function(b){b.setAttribute('aria-pressed',active.indexOf(b.dataset.sh)>=0)});
+    document.querySelectorAll('.linkbar button').forEach(function(b){var k=b.dataset.show;b.setAttribute('aria-pressed',k==='all'?active.length===5:(k!=='none'&&active.length<5&&active.indexOf(k)>=0))});
+    why.textContent=active.length===1?MAP[active[0]].why:(active.length?'แสดงเส้นเชื่อมโยงของ Stakeholder ทุกกลุ่ม · คลิกกล่องเพื่อดูทีละกลุ่ม':defWhy);
+    if(!active.length)return;
+    var W=wrap.getBoundingClientRect(),stacked=getComputedStyle(wrap).gridTemplateColumns.split(' ').length<2;
+    var ns='http://www.w3.org/2000/svg';
+    active.forEach(function(k){
+      var box=wrap.querySelector('.box[data-sh="'+k+'"]');var b=box.getBoundingClientRect();
+      var col=getComputedStyle(box).getPropertyValue('--c').trim()||'#888';
+      var bc={x:b.left+b.width/2-W.left,y:b.top+b.height/2-W.top};
+      MAP[k].rings.forEach(function(rk,i){
+        var ring=wrap.querySelector('.ring[data-ring="'+rk+'"]');ring.classList.add('hit');
+        var r=ring.getBoundingClientRect();var c={x:r.left+r.width/2-W.left,y:r.top+r.height/2-W.top},rad=r.width/2;
+        var sx,sy;
+        if(stacked){sx=bc.x;sy=b.top-W.top}else{sx=(bc.x<c.x?b.right:b.left)-W.left;sy=bc.y+(i-(MAP[k].rings.length-1)/2)*10}
+        var dx=sx-c.x,dy=sy-c.y,d=Math.hypot(dx,dy)||1;var ex=c.x+dx/d*rad,ey=c.y+dy/d*rad;
+        var mx=(sx+ex)/2,path=document.createElementNS(ns,'path');
+        path.setAttribute('d',stacked?('M'+sx+','+sy+' C'+sx+','+(sy+ey)/2+' '+ex+','+(sy+ey)/2+' '+ex+','+ey):('M'+sx+','+sy+' C'+mx+','+sy+' '+mx+','+ey+' '+ex+','+ey));
+        path.setAttribute('stroke',col);if(k==='admin')path.setAttribute('stroke-dasharray','6 5');
+        svg.appendChild(path);
+        [[sx,sy],[ex,ey]].forEach(function(p){var ci=document.createElementNS(ns,'circle');ci.setAttribute('cx',p[0]);ci.setAttribute('cy',p[1]);ci.setAttribute('r',4.5);ci.setAttribute('fill',col);svg.appendChild(ci)});
+      });
+    });
+  }
+  function setOnly(k){active=(active.length===1&&active[0]===k)?[]:[k];draw()}
+  document.querySelectorAll('.linkbar button').forEach(function(b){b.addEventListener('click',function(){var k=b.dataset.show;
+    if(k==='all')active=active.length===5?[]:Object.keys(MAP);else if(k==='none')active=[];else setOnly(k);draw()})});
+  wrap.querySelectorAll('.box[data-sh]').forEach(function(box){
+    box.addEventListener('click',function(){setOnly(box.dataset.sh)});
+    box.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();setOnly(box.dataset.sh)}});
+  });
+  window.addEventListener('resize',draw);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 })();
 </script>
