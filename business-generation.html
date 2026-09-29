@@ -268,6 +268,31 @@ td.none{color:var(--muted);font-size:12px}
 }
 @media (prefers-reduced-motion:reduce){.row2 .nm .cv{transition:none}}
 
+/* CRM dialog */
+.is-link{text-decoration-color:var(--is)}
+.is-link:hover{color:var(--is)}
+.crm-dlg{width:min(900px,calc(100% - 32px));max-height:calc(100% - 32px);border:1px solid var(--line);border-radius:14px;padding:24px;background:var(--surface);color:var(--ink);box-sizing:border-box}
+.crm-dlg[open]{display:flex;flex-direction:column;gap:16px}
+.crm-dlg::backdrop{background:rgba(10,18,32,.55)}
+.crm-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.crm-top h2{margin-top:4px}
+.crm-x{font:inherit;font-size:18px;line-height:1;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;width:36px;height:36px;cursor:pointer;flex:none}
+.crm-x:focus-visible{outline:2px solid var(--is);outline-offset:2px}
+.crm-p{max-width:75ch;font-size:14.5px}
+.crm-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cf{border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;background:var(--is-bg)}
+.cf small{font-family:var(--mono);font-size:11px;color:var(--is)}
+.cf b{font-size:14px}
+.cf.src{background:var(--bg)}
+.cf.end{border-color:var(--is)}
+.ca{color:var(--muted)}
+.crm-wheel{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:14px}
+.wheel-wrap{overflow-x:auto}
+.wheel{display:block;width:100%;min-width:560px;height:auto}
+.wheel .wn{fill:#FFFFFF;font:600 16px var(--mono);text-anchor:middle}
+.wheel .wc{fill:var(--ink);font:700 15px var(--font);text-anchor:middle}
+.wheel .wl{fill:var(--ink);font:500 13px var(--font)}
+
 footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
 
 @media (max-width:820px){
@@ -420,7 +445,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
           <div class="ring r-cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><a class="nw ring-link" href="https://bellepotty97.github.io/CDX/products.html?core=Distribution+Transformer" target="_blank" rel="noopener" title="เปิด Customer Engagement Platform">Customer Engagement Platform ↗</a><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
           <div class="ring r-eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span><a class="ring-link eco-link" href="https://claude.ai/artifact/8Wx69dHwpNFMPAMBqoQdQv" target="_blank" rel="noopener" title="เปิด Channel Member">Channel Member Management ↗</a><br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
           <div class="ring r-iot"><b>IoT</b><small>อุปกรณ์ · เซ็นเซอร์ · หน่วยงาน</small><span>ส่งต่อ Insight/Lead ให้ทีมขาย RVT อื่นไปปิดการขายในสาย Revenue ของตนเองได้</span></div>
-          <div class="ring r-is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span>(BG) Customer Relationship Management /CRM<br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
+          <div class="ring r-is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span><a class="ring-link is-link" href="#crm" id="crm-open" title="ดูรายละเอียด CRM">(BG) Customer Relationship Management /CRM ↗</a><br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
           <div class="ring r-da"><b>Data &amp; Analytics</b><small>ข้อมูลและการวิเคราะห์ (ศูนย์กลาง)</small><span class="da-list"><span>Sale Forecasting for Chase Sale Operation</span><span>Near Real time Inventory &amp; Lead time</span><span>AI Chatbot</span><span>Inventory Max-Min Stock</span><span>Bid-Product Mapping</span><span>Recurring Analysis</span></span></div>
         </div>
       </div>
@@ -573,6 +598,43 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   </details>
 </section>
 
+
+<dialog id="crm" class="crm-dlg" aria-labelledby="crm-title">
+  <div class="crm-top">
+    <div>
+      <span class="eyebrow" style="color:var(--is)">Information System · (BG) CRM บน Odoo ERP</span>
+      <h2 id="crm-title">Customer Relationship Management (CRM)</h2>
+    </div>
+    <button type="button" class="crm-x" id="crm-close" aria-label="ปิด">✕</button>
+  </div>
+  <p class="crm-p">Customer Relationship Management หรือ CRM คือระบบที่ใช้บริหารความสัมพันธ์กับลูกค้า ตั้งแต่ต้นทางที่ลูกค้ารู้จักหรือสนใจเรา จนถึงปิดการขาย เป็นทั้งกลยุทธ์และเครื่องมือที่ธุรกิจใช้เพื่อดูแล ทำความเข้าใจ และสร้างความสัมพันธ์อันดีกับลูกค้าในระยะยาว</p>
+  <p class="crm-p">CRM เป็น 1 ใน Module ของ ERP Odoo อยู่แล้ว จึงคาดหวังให้ใช้บน <b>Odoo ที่ PEM กำลังพัฒนาอยู่</b> โดยเชื่อมข้อมูล Lead ที่มาจาก Website หรือช่องทางต่าง ๆ บันทึก Opportunity และติดตาม Pipeline ได้จนถึง Quotation และได้ PO จากลูกค้า</p>
+  <div class="crm-flow" aria-label="เส้นทางข้อมูลใน Odoo CRM">
+    <div class="cf src"><small>ช่องทาง</small><b>Website · LINE OA · Facebook · ช่องทางอื่น</b></div>
+    <span class="ca" aria-hidden="true">→</span>
+    <div class="cf"><small>1</small><b>Lead</b></div>
+    <span class="ca" aria-hidden="true">→</span>
+    <div class="cf"><small>2</small><b>Opportunity</b></div>
+    <span class="ca" aria-hidden="true">→</span>
+    <div class="cf"><small>3</small><b>Pipeline</b></div>
+    <span class="ca" aria-hidden="true">→</span>
+    <div class="cf"><small>4</small><b>Quotation</b></div>
+    <span class="ca" aria-hidden="true">→</span>
+    <div class="cf end"><small>5</small><b>PO จากลูกค้า</b></div>
+  </div>
+  <div class="crm-wheel">
+    <div class="eyebrow">Key Features of Odoo CRM</div>
+    <div class="wheel-wrap">
+        <svg class="wheel" viewBox="0 0 760 450" role="img" aria-label="Key Features of Odoo CRM: Lead management, Customer data management, Pipeline management, Customer interaction tracking, Sales analytics, Integration with other Odoo apps, Mobile Accessibility">
+          <path d="M383.1,65.0 A150,150 0 0 1 495.3,119.0 L429.2,174.1 A64,64 0 0 0 381.3,151.0 Z" fill="#6D3FE0"/><text x="426.4" y="124.6" class="wn">1</text><path d="M499.2,124.0 A150,150 0 0 1 526.9,245.3 L442.7,227.9 A64,64 0 0 0 430.9,176.2 Z" fill="#5B3DDA"/><text x="484.3" y="197.2" class="wn">2</text><path d="M525.5,251.4 A150,150 0 0 1 447.9,348.8 L409.0,272.1 A64,64 0 0 0 442.1,230.5 Z" fill="#4A3CD3"/><text x="463.7" y="287.7" class="wn">3</text><path d="M442.2,351.5 A150,150 0 0 1 317.8,351.5 L353.4,273.2 A64,64 0 0 0 406.6,273.2 Z" fill="#3A45CC"/><text x="380.0" y="328.0" class="wn">4</text><path d="M312.1,348.8 A150,150 0 0 1 234.5,251.4 L317.9,230.5 A64,64 0 0 0 351.0,272.1 Z" fill="#2D5BD0"/><text x="296.3" y="287.7" class="wn">5</text><path d="M233.1,245.3 A150,150 0 0 1 260.8,124.0 L329.1,176.2 A64,64 0 0 0 317.3,227.9 Z" fill="#2279D8"/><text x="275.7" y="197.2" class="wn">6</text><path d="M264.7,119.0 A150,150 0 0 1 376.9,65.0 L378.7,151.0 A64,64 0 0 0 330.8,174.1 Z" fill="#1A97E2"/><text x="333.6" y="124.6" class="wn">7</text>
+          <circle cx="380" cy="215" r="58" fill="var(--surface)"/>
+          <text x="380" y="205" class="wc">Key Features</text><text x="380" y="225" class="wc">of Odoo CRM</text>
+          <line x1="451.2" y1="67.2" x2="457.2" y2="54.6" stroke="#6D3FE0" stroke-width="1.5"/><text x="459.8" y="53.2" text-anchor="start" class="wl"><tspan x="459.8" dy="0">Lead management</tspan></text><line x1="539.9" y1="178.5" x2="553.5" y2="175.4" stroke="#5B3DDA" stroke-width="1.5"/><text x="559.4" y="172.1" text-anchor="start" class="wl"><tspan x="559.4" dy="0">Customer data</tspan><tspan x="559.4" dy="15">management</tspan></text><line x1="508.2" y1="317.3" x2="519.2" y2="326.0" stroke="#4A3CD3" stroke-width="1.5"/><text x="523.9" y="327.7" text-anchor="start" class="wl"><tspan x="523.9" dy="0">Pipeline</tspan><tspan x="523.9" dy="15">management</tspan></text><line x1="380.0" y1="379.0" x2="380.0" y2="393.0" stroke="#3A45CC" stroke-width="1.5"/><text x="380.0" y="413.0" text-anchor="middle" class="wl"><tspan x="380.0" dy="0">Customer interaction</tspan><tspan x="380.0" dy="15">tracking</tspan></text><line x1="251.8" y1="317.3" x2="240.8" y2="326.0" stroke="#2D5BD0" stroke-width="1.5"/><text x="236.1" y="333.7" text-anchor="end" class="wl"><tspan x="236.1" dy="0">Sales analytics</tspan></text><line x1="220.1" y1="178.5" x2="206.5" y2="175.4" stroke="#2279D8" stroke-width="1.5"/><text x="200.6" y="172.1" text-anchor="end" class="wl"><tspan x="200.6" dy="0">Integration with</tspan><tspan x="200.6" dy="15">other Odoo apps</tspan></text><line x1="308.8" y1="67.2" x2="302.8" y2="54.6" stroke="#1A97E2" stroke-width="1.5"/><text x="300.2" y="47.2" text-anchor="end" class="wl"><tspan x="300.2" dy="0">Mobile</tspan><tspan x="300.2" dy="15">Accessibility</tspan></text>
+        </svg>
+    </div>
+  </div>
+</dialog>
+
 <footer>อ้างอิง: Omni Channel — มุมมองอย่างย่อ (Gartner DBTP) และ Omni Channel Platform – Business Generation · รายละเอียด Capability / Activity ดูได้ใน RST Architecture Studio</footer>
 
 </div>
@@ -620,5 +682,15 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   var allBtn=document.getElementById('npd-all');
   allBtn.addEventListener('click',function(){var ds=root.querySelectorAll('#npd-list details');var anyClosed=[].some.call(ds,function(d){return !d.open});ds.forEach(function(d){d.open=anyClosed});allBtn.textContent=anyClosed?'หุบทั้งหมด':'กางทั้งหมด'});
   render();
+})();
+</script>
+<script>
+(function(){
+  var dlg=document.getElementById('crm');if(!dlg)return;
+  function openIt(){try{dlg.showModal()}catch(e){dlg.setAttribute('open','')}}
+  document.getElementById('crm-open').addEventListener('click',function(e){e.preventDefault();openIt()});
+  document.getElementById('crm-close').addEventListener('click',function(){dlg.close?dlg.close():dlg.removeAttribute('open')});
+  dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
+  if(location.hash==='#crm')openIt();
 })();
 </script>
