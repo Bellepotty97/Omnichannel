@@ -162,6 +162,9 @@ td.none{color:var(--muted);font-size:12px}
 .ring b{font-size:clamp(9px,3.5cqw,16px);color:var(--rc);line-height:1.2}
 .ring > span{font-weight:600}
 .nw{white-space:nowrap}
+.ring-link{color:inherit;text-decoration:underline;text-decoration-color:var(--cx);text-underline-offset:2px;position:relative;z-index:3}
+.ring-link:hover{color:var(--cx)}
+.ring-link:focus-visible{outline:2px solid var(--cx);outline-offset:2px;border-radius:2px}
 .ring small{font-size:clamp(7px,2.1cqw,10px);color:var(--rc);opacity:.85;padding-bottom:.8cqw;border-bottom:1px solid var(--rc)}
 .r-cx,.r-eco{justify-content:flex-start;padding-top:9%}
 .r-cx{padding-inline:4%}
@@ -412,7 +415,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <header><b>Omni Channel Platform</b><span>1 มือถือ = 1 Platform · ข้างในคือ 5 ห่วง DBTP</span></header>
       <div class="screen">
         <div class="rings">
-          <div class="ring r-cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><span class="nw">Customer Engagement Platform</span><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
+          <div class="ring r-cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><a class="nw ring-link" href="https://bellepotty97.github.io/CDX/products.html?core=Distribution+Transformer" target="_blank" rel="noopener" title="เปิด Customer Engagement Platform">Customer Engagement Platform ↗</a><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
           <div class="ring r-eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span>Channel Member Management<br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
           <div class="ring r-iot"><b>IoT</b><small>อุปกรณ์ · เซ็นเซอร์ · หน่วยงาน</small><span>ส่งต่อ Insight/Lead ให้ทีมขาย RVT อื่นไปปิดการขายในสาย Revenue ของตนเองได้</span></div>
           <div class="ring r-is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span>(BG) Customer Relationship Management /CRM<br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
