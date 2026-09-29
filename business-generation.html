@@ -374,7 +374,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     <div class="npd-kpi" id="npd-kpi"></div>
     <div class="npd-years" id="npd-years" aria-label="รวมรายปี"></div>
     <div class="npd-list" id="npd-list"></div>
-    <p class="note">คลิกชื่อ Product Category เพื่อกางดู Product Type · ป้าย NPD = Status of Product "New" ตามไฟล์ (ทุกรายการในตัวกรองนี้เป็น New) · แท่งยาวตามยอดรวม 7 ปี</p>
+    <p class="note">คลิกชื่อ Product Category เพื่อกางดู Product Type · ป้าย NPD = Status of Product "New" ตามไฟล์ (ทุกรายการในตัวกรองนี้เป็น New) · แท่งยาวตามยอดรวม 7 ปี · ไม่แสดง Type ที่ยังไม่มียอด PO และ GP</p>
   </div>
   <div class="ksf">
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -576,6 +576,8 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   var DATA=[{"n":"Compact substation","t":[{"n":"Modular Substation Solution","po":[52.95,null,null,null,null,null,null],"gp":[12.24,null,null,null,null,null,null]},{"n":"Prefabricated e-house Solution","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]},{"n":"Unit Substation","po":[4.74,null,null,null,null,null,null],"gp":[1.1,null,null,null,null,null,null]},{"n":"Unit substation 24kV 500 - 1000 kVA","po":[null,31.41,39.5,41.57,49.3,51.59,54.1],"gp":[null,6.54,8.13,8.71,11.91,11.91,11.91]}]},{"n":"Distribution Transformer","t":[{"n":"3 Phase Distribution Transformer Bio base","po":[1.96,1.96,null,null,null,null,null],"gp":[0.36,0.2,null,null,null,null,null]},{"n":"3 Phase Distribution Transformer Dry cast","po":[5.89,5.89,5.84,5.84,3.7,3.87,4.06],"gp":[1.07,0.6,0.59,0.62,0.83,0.83,0.83]}]},{"n":"Fuse","t":[{"n":"Fuse Switches Disconnectors","po":[31.45,null,null,null,null,null,null],"gp":[8.02,null,null,null,null,null,null]}]},{"n":"GIS SF6-free","t":[{"n":"115kV GIS SF6-free","po":[0,0,56.75,59.27,66.56,69.64,73.03],"gp":[0,0,17.34,18.07,16.48,16.48,16.48]},{"n":"24kV GIS SF6-free","po":[0,0,0,0,0,0,0],"gp":[0,0,0,0,0,0,0]},{"n":"36kV GIS SF6-free","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Instrument Transformer (Dry Type)","t":[{"n":"VT Outdoor Power supply VExL-24,VExL-36","po":[2.09,1.29,1.44,1.5,1.33,1.35,1.37],"gp":[0.96,0.26,0.28,0.29,0.28,0.28,0.28]}]},{"n":"Instrument Transformer (Oil Type)","t":[{"n":"CT 115","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]},{"n":"VT 115","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"LBS SF6-free","t":[{"n":"115kV SF6-free","po":[0,0,0,0,0,0,0],"gp":[0,0,0,0,0,0,0]}]},{"n":"LED Products & system","t":[{"n":"LED street lights 2x20W","po":[23.55,null,null,null,null,null,null],"gp":[7.21,null,null,null,null,null,null]},{"n":"LED street lights 94W","po":[25.36,30.53,null,null,null,null,null],"gp":[5.18,5.69,null,null,null,null,null]},{"n":"Photo switch 220V 30A","po":[3.94,null,null,null,null,null,null],"gp":[0.8,null,null,null,null,null,null]}]},{"n":"Load Break Switch","t":[{"n":"24kV Solid Load Break Switch","po":[32.09,98.04,null,null,null,null,null],"gp":[10.29,22.86,null,null,null,null,null]},{"n":"36kV Solid Load Break Switch","po":[6.84,18.37,19.49,20.03,15.26,15.96,16.74],"gp":[1.83,3.99,4.25,4.44,3.97,3.97,3.97]}]},{"n":"Low Voltage Switchboard","t":[{"n":"IOT Transformer Box","po":[4.93,null,null,null,null,null,null],"gp":[1.43,null,null,null,null,null,null]}]},{"n":"Recloser","t":[{"n":"24kV Solid Recloser","po":[10.77,19.04,23.14,23.41,15.05,15.75,16.51],"gp":[3.16,3.92,4.52,4.76,4.3,4.3,4.3]},{"n":"36kV Solid Recloser","po":[0,3.64,3.79,3.87,2.71,2.83,2.97],"gp":[0,0.73,0.8,0.84,0.7,0.7,0.7]}]},{"n":"Solid Ring Main Unit","t":[{"n":"24kV Solid Ring Main Unit (SRMU)","po":[4.44,9.47,9.46,9.88,11.09,11.61,12.17],"gp":[1.11,2.7,2.89,3.01,2.75,2.75,2.75]},{"n":"36kV Solid Ring Main Unit (SRMU)","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Solution On Demand & Service","t":[{"n":"IOT Transformer Box","po":[null,7.17,7.73,8.06,6.16,6.45,6.76],"gp":[null,1.39,1.45,1.53,1.49,1.49,1.49]}]},{"n":"Switch Capacitor","t":[{"n":"24kV Switch Capacitor","po":[0,null,null,null,null,null,null],"gp":[0,null,null,null,null,null,null]}]},{"n":"Switchboard","t":[{"n":"MDB Distribution Board(Type test)","po":[null,23.79,23.97,25.32,24.65,25.79,27.05],"gp":[null,5.14,4.9,5.3,5.96,5.96,5.96]}]}];
   var YEARS=[2027,2028,2029,2030,2031,2032,2033];
   var metric='gp';
+  var tot0=function(a){return a.reduce(function(s,v){return s+(v||0)},0)};
+  DATA=DATA.map(function(c){return {n:c.n,t:c.t.filter(function(t){return tot0(t.po)+tot0(t.gp)>0})}}).filter(function(c){return c.t.length>0});
   var root=document.getElementById('npd');
   var sum=function(a){return a.reduce(function(s,v){return s+(v||0)},0)};
   var f1=function(v){return v==null?'–':(Math.round(v*10)/10).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})};
@@ -589,12 +591,11 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
     var yrTot=YEARS.map(function(_,i){return sum(cats.map(function(x){return x.y[i]}))});
     var other=metric==='gp'?'po':'gp';
     var totO=sum(DATA.map(function(c){return sum(catYears(c,other))}));
-    var nTypes=0,nZero=0;DATA.forEach(function(c){c.t.forEach(function(t){nTypes++;if(sum(t[metric])===0&&sum(t[other])===0)nZero++})});
+    var nTypes=0;DATA.forEach(function(c){nTypes+=c.t.length});
     document.getElementById('npd-kpi').innerHTML=
       '<div><b>'+f1(sum(yrTot))+'</b><span>'+(metric==='gp'?'GP':'PO Receive')+' รวม 7 ปี (mb)</span></div>'+
       '<div><b>'+f1(totO)+'</b><span>'+(metric==='gp'?'PO Receive':'GP')+' รวม 7 ปี (mb)</span></div>'+
-      '<div><b>'+DATA.length+' / '+nTypes+'</b><span>Product Category / Product Type (NPD)</span></div>'+
-      '<div><b>'+nZero+'</b><span>Type ที่ยังไม่มีตัวเลข</span></div>';
+      '<div><b>'+DATA.length+' / '+nTypes+'</b><span>Product Category / Product Type (NPD)</span></div>';
     var ym=Math.max.apply(null,yrTot)||1;
     document.getElementById('npd-years').innerHTML=yrTot.map(function(v){return '<div class="yb"><b>'+f1(v)+'</b><i style="height:'+(v/ym*80).toFixed(1)+'%"></i></div>'}).join('');
     var yl=root.querySelector('.yl');if(!yl){yl=document.createElement('div');yl.className='yl';document.getElementById('npd-years').after(yl)}
