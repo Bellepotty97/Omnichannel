@@ -164,6 +164,11 @@ td.none{color:var(--muted);font-size:12px}
 .nw{white-space:nowrap}
 .ring-link{color:inherit;text-decoration:underline;text-decoration-color:var(--cx);text-underline-offset:2px;position:relative;z-index:3}
 .ring-link:hover{color:var(--cx)}
+.eco-link{text-decoration-color:var(--eco)}
+.eco-link:hover{color:var(--eco)}
+.box-link{color:inherit;text-decoration:underline;text-decoration-color:var(--c);text-underline-offset:3px}
+.box-link:hover{color:var(--c)}
+.box-link:focus-visible{outline:2px solid var(--c);outline-offset:2px}
 .ring-link:focus-visible{outline:2px solid var(--cx);outline-offset:2px;border-radius:2px}
 .ring small{font-size:clamp(7px,2.1cqw,10px);color:var(--rc);opacity:.85;padding-bottom:.8cqw;border-bottom:1px solid var(--rc)}
 .r-cx,.r-eco{justify-content:flex-start;padding-top:9%}
@@ -416,7 +421,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <div class="screen">
         <div class="rings">
           <div class="ring r-cx"><b>Customer Experience</b><small>ช่องทางและประสบการณ์ลูกค้า</small><span><a class="nw ring-link" href="https://bellepotty97.github.io/CDX/products.html?core=Distribution+Transformer" target="_blank" rel="noopener" title="เปิด Customer Engagement Platform">Customer Engagement Platform ↗</a><br>Website · LINE OA · Facebook<br>Customer Satisfaction &amp;After Sales</span></div>
-          <div class="ring r-eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span>Channel Member Management<br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
+          <div class="ring r-eco"><b>Ecosystem</b><small>พาร์ตเนอร์และระบบนิเวศ</small><span><a class="ring-link eco-link" href="https://claude.ai/artifact/8Wx69dHwpNFMPAMBqoQdQv" target="_blank" rel="noopener" title="เปิด Channel Member">Channel Member Management ↗</a><br>Dealer Registration<br>Target &amp; Performance<br>Check Pricelist<br>Ordering &amp; Fulfillment<br>Traning · Enablement<br>Rewarding</span></div>
           <div class="ring r-iot"><b>IoT</b><small>อุปกรณ์ · เซ็นเซอร์ · หน่วยงาน</small><span>ส่งต่อ Insight/Lead ให้ทีมขาย RVT อื่นไปปิดการขายในสาย Revenue ของตนเองได้</span></div>
           <div class="ring r-is"><b>Information System</b><small>ระบบงานหลักขององค์กร (ERP)</small><span>(BG) Customer Relationship Management /CRM<br>Lead Management<br>Quotation &amp; Contract Management<br>Product Platform<br>(DS) Odoo ERP · ZTT Platform</span></div>
           <div class="ring r-da"><b>Data &amp; Analytics</b><small>ข้อมูลและการวิเคราะห์ (ศูนย์กลาง)</small><span class="da-list"><span>Sale Forecasting for Chase Sale Operation</span><span>Near Real time Inventory &amp; Lead time</span><span>AI Chatbot</span><span>Inventory Max-Min Stock</span><span>Bid-Product Mapping</span><span>Recurring Analysis</span></span></div>
@@ -426,7 +431,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 
     <div class="side">
       <div class="box" style="--c:#C0392B">
-        <h3>Channel Member</h3>
+        <h3><a class="box-link" href="https://claude.ai/artifact/8Wx69dHwpNFMPAMBqoQdQv" target="_blank" rel="noopener">Channel Member ↗</a></h3>
         <ul><li>Stakeholder หลัก/ เป้าหมายเพิ่มขึ้นปีละ 5 ราย</li><li>Smartshop · Main Contractor· Dealer</li></ul>
       </div>
       <div class="box" style="--c:#12846F">
