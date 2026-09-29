@@ -733,11 +733,11 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
 <script>
 (function(){
   var MAP={
-    eu:{rings:['cx','eco'],why:'End User ใช้ Customer Engagement Platform ดู Catalog (Customer Experience) และซื้อผ่าน PEM105 หรือ Channel Member (Ecosystem)'},
+    eu:{rings:['cx'],why:'End User ใช้ Customer Engagement Platform ดู Catalog และซื้อของ (Customer Experience)'},
     comp:{rings:['is'],why:'Complementor ให้ข้อมูลประกอบการขายผ่าน Catalog & Product Platform (Information System)'},
     admin:{rings:['cx','eco','da','iot','is'],why:'Platform Admin (ทีม IT / Cyber Security) ดูแลระบบทุกห่วง'},
-    cm:{rings:['eco','cx','da'],why:'Channel Member ใช้ Ecosystem (สมัคร Dealer, Pricelist, Ordering, Rewarding) ผ่านช่องทาง Customer Experience และใช้ Data เช็ก Stock / Lead time และ AI Chatbot'},
-    sale:{rings:['is','da','iot'],why:'Sale/KA ใช้ Information System (CRM, Lead, Quotation, Sale Order) ใช้ Data ทำ Sale Forecasting และเช็ก Stock และรับ Insight/Lead จาก IoT'}
+    cm:{rings:['eco'],why:'Channel Member ใช้ Ecosystem (Channel Member Management, Dealer Registration, Pricelist, Ordering, Rewarding)'},
+    sale:{rings:['is'],why:'Sale/KA ใช้ Information System (CRM, Lead, Quotation, Sale Order)'}
   };
   var wrap=document.querySelector('.dbtp'),svg=document.getElementById('links'),why=document.getElementById('lb-why');
   if(!wrap||!svg)return;
@@ -764,7 +764,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
         var dx=sx-c.x,dy=sy-c.y,d=Math.hypot(dx,dy)||1;var ex=c.x+dx/d*rad,ey=c.y+dy/d*rad;
         var mx=(sx+ex)/2,path=document.createElementNS(ns,'path');
         path.setAttribute('d',stacked?('M'+sx+','+sy+' C'+sx+','+(sy+ey)/2+' '+ex+','+(sy+ey)/2+' '+ex+','+ey):('M'+sx+','+sy+' C'+mx+','+sy+' '+mx+','+ey+' '+ex+','+ey));
-        path.setAttribute('stroke',col);if(k==='admin')path.setAttribute('stroke-dasharray','6 5');
+        path.setAttribute('stroke',col);if(k==='admin'||k==='comp')path.setAttribute('stroke-dasharray','6 5');
         svg.appendChild(path);
         [[sx,sy],[ex,ey]].forEach(function(p){var ci=document.createElementNS(ns,'circle');ci.setAttribute('cx',p[0]);ci.setAttribute('cy',p[1]);ci.setAttribute('r',4.5);ci.setAttribute('fill',col);svg.appendChild(ci)});
       });
