@@ -213,7 +213,8 @@ td.none{color:var(--muted);font-size:12px}
 @media (prefers-reduced-motion:reduce){.chev{transition:none}}
 
 /* NPD */
-.more{font-size:13px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:auto}
+.more{font:inherit;font-size:13px;color:var(--accent);font-weight:600;background:none;border:0;padding:0;text-align:left;cursor:pointer;margin-top:auto}
+.more:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .more:hover{text-decoration:underline}
 .npd{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px}
 .npd-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -405,10 +406,10 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
       <span class="tag">A3 · Product</span>
       <h3>เพิ่ม New Product เป็น New Opportunity</h3>
       <p>ขยาย Product List ผ่าน Product Platform และ Complementor เพื่อเปิดโอกาสขายใหม่</p>
-      <a class="more" href="#npd">ดูรายการ New Product (NPD) ↓</a>
+      <button type="button" class="more" id="npd-toggle" aria-expanded="false" aria-controls="npd">ดูรายการ New Product (NPD) ↓</button>
     </div>
   </div>
-  <div class="npd" id="npd">
+  <div class="npd" id="npd" hidden>
     <div class="npd-head">
       <div>
         <span class="tag">A3 · Product · New Product (NPD)</span>
@@ -705,6 +706,10 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   var allBtn=document.getElementById('npd-all');
   allBtn.addEventListener('click',function(){var ds=root.querySelectorAll('#npd-list details');var anyClosed=[].some.call(ds,function(d){return !d.open});ds.forEach(function(d){d.open=anyClosed});allBtn.textContent=anyClosed?'หุบทั้งหมด':'กางทั้งหมด'});
   render();
+  var tgl=document.getElementById('npd-toggle');
+  if(tgl)tgl.addEventListener('click',function(){var open=root.hidden;root.hidden=!open;tgl.setAttribute('aria-expanded',open);
+    tgl.textContent=open?'ซ่อนรายการ New Product (NPD) ↑':'ดูรายการ New Product (NPD) ↓';
+    if(open)root.scrollIntoView({behavior:'smooth',block:'start'})});
 })();
 </script>
 <script>
