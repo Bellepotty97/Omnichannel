@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omni Channel Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F5F6F8; --surface:#FFFFFF; --surface-2:#F0F2F5; --ink:#13243F; --muted:#5A6477; --faint:#8A93A3; --line:#DDE1E8; --grid:#E9ECF1;
+  --accent:#D9622B; --up:#1B7F4C; --dn:#C0392B;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948; --other:#A7AEB9;
+  --font:"IBM Plex Sans Thai","Noto Sans Thai",Tahoma,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1522; --surface:#16202F; --surface-2:#1C2838; --ink:#E6EAF1; --muted:#9AA5B8; --faint:#6E7A8E; --line:#2A3649; --grid:#223044;
+    --accent:#F0874F; --up:#4CC38A; --dn:#F07A6E;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --other:#5E687A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1522; --surface:#16202F; --surface-2:#1C2838; --ink:#E6EAF1; --muted:#9AA5B8; --faint:#6E7A8E; --line:#2A3649; --grid:#223044;
+  --accent:#F0874F; --up:#4CC38A; --dn:#F07A6E;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --other:#5E687A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 16px 48px}
+header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:4px;margin:20px 0 16px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{font:inherit;font-weight:600;color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+section[hidden]{display:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:4px}
+.kpi .v small{font-size:13px;font-weight:500;color:var(--muted);margin-left:4px}
+.kpi .s{font-size:12px;color:var(--faint);margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.card h2{margin:0;font-size:15px;font-weight:600}
+.card .sub{color:var(--muted);font-size:12px;margin:2px 0 12px}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){th:first-child,td:first-child{min-width:150px}.kpi .v{font-size:22px}}
+.chart{position:relative;height:340px}
+.chart.sm{height:260px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:12px;font-weight:600;background:var(--surface);color:var(--muted);border:0;padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);color:var(--muted);font-weight:600;position:sticky;top:0}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1;min-width:230px;white-space:normal}
+th:first-child{background:var(--surface-2);z-index:2}
+th.fc{color:var(--accent)}
+tr.parent td:first-child{font-weight:600;cursor:pointer}
+tr.parent td:first-child::before{content:"▸";display:inline-block;width:14px;color:var(--faint);transition:transform .15s}
+tr.parent.open td:first-child::before{transform:rotate(90deg)}
+tr.child td{color:var(--muted);background:var(--surface-2)}
+tr.child td:first-child{padding-left:30px;background:var(--surface-2)}
+tr.total td{font-weight:700;border-top:2px solid var(--ink)}
+tr.total td:first-child::before{content:none}
+td.z{color:var(--faint)}
+.up{color:var(--up)} .dn{color:var(--dn)}
+.tools{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+.note{font-size:12px;color:var(--muted);background:var(--surface-2);border-left:3px solid var(--accent);padding:10px 12px;border-radius:4px;margin-bottom:16px}
+.inputs{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.inputs label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.inputs input{font:inherit;font-variant-numeric:tabular-nums;width:130px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+footer{color:var(--faint);font-size:12px;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Omni Channel — PO &amp; GP Forecast</h1>
+  <p id="srcline"></p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="omni">Omni Channel</button>
+  <button role="tab" aria-selected="false" data-tab="npd">NPD — New Products</button>
+  <button role="tab" aria-selected="false" data-tab="channel">Channel Member</button>
+  <button role="tab" aria-selected="false" data-tab="inc">Increase Channel Member</button>
+</nav>
+
+<section id="tab-omni">
+  <div class="kpis" id="omni-kpis"></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><div><h2 id="omni-title"></h2><div class="sub">ล้านบาท (MB) · 2566–2568 Actual · 2569 Base · 2570–2576 Forecast</div></div>
+        <div class="seg" data-metric="omni"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
+      <div class="chart"><canvas id="omni-bar"></canvas></div><div class="legend" id="omni-legend"></div>
+    </div>
+    <div class="card"><h2>%GP Margin</h2><div class="sub">GP ÷ PO Receive</div><div class="chart"><canvas id="omni-gpm"></canvas></div></div>
+  </div>
+  <div class="card">
+    <h2 id="omni-tbl-title"></h2><div class="sub">คลิกชื่อกลุ่มเพื่อดู Product Category · 2566–2568 มีเฉพาะระดับกลุ่ม</div>
+    <div class="tools"><button class="btn" data-expand="omni">ขยายทั้งหมด</button><button class="btn" data-collapse="omni">ย่อทั้งหมด</button></div>
+    <div class="tbl-wrap"><table id="omni-tbl"></table></div>
+  </div>
+</section>
+
+<section id="tab-npd" hidden>
+  <div class="note">NPD = แถวที่ <b>Status of Product = "New"</b> ในชีท Revenue _ R.1 (Omni Channel, PEM105) ถ้าสินค้าตัวไหนเปลี่ยนสถานะเป็น Existing ในปีถัดไป ยอดของปีนั้นจะไม่ถูกนับเป็น NPD</div>
+  <div class="kpis" id="npd-kpis"></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><div><h2 id="npd-title"></h2><div class="sub">ล้านบาท (MB) · 2569 Base · 2570–2576 Forecast</div></div>
+        <div class="seg" data-metric="npd"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
+      <div class="chart"><canvas id="npd-bar"></canvas></div><div class="legend" id="npd-legend"></div>
+    </div>
+    <div class="card"><h2>NPD Share of Omni PO</h2><div class="sub">NPD PO ÷ Omni PO ทั้งหมด</div><div class="chart"><canvas id="npd-share"></canvas></div></div>
+  </div>
+  <div class="card">
+    <h2 id="npd-tbl-title"></h2><div class="sub">คลิกชื่อกลุ่มเพื่อดู Product Type</div>
+    <div class="tools"><button class="btn" data-expand="npd">ขยายทั้งหมด</button><button class="btn" data-collapse="npd">ย่อทั้งหมด</button></div>
+    <div class="tbl-wrap"><table id="npd-tbl"></table></div>
+  </div>
+</section>
+
+<section id="tab-channel" hidden>
+  <div class="kpis" id="channel-kpis"></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><div><h2 id="channel-title"></h2><div class="sub">ล้านบาท (MB) · แยกตาม Customer Segment / KA / Country</div></div>
+        <div class="seg" data-metric="channel"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
+      <div class="chart"><canvas id="channel-bar"></canvas></div><div class="legend" id="channel-legend"></div>
+    </div>
+    <div class="card"><h2>%GP by Channel — 2576</h2><div class="sub">เรียงตาม PO Receive ปี 2576</div><div class="chart"><canvas id="channel-gpm"></canvas></div></div>
+  </div>
+  <div class="card">
+    <h2 id="channel-tbl-title"></h2><div class="sub">คลิกชื่อ Channel เพื่อดู Core Product</div>
+    <div class="tools"><button class="btn" data-expand="channel">ขยายทั้งหมด</button><button class="btn" data-collapse="channel">ย่อทั้งหมด</button></div>
+    <div class="tbl-wrap"><table id="channel-tbl"></table></div>
+  </div>
+</section>
+
+<section id="tab-inc" hidden>
+  <div class="note">ข้อมูลส่วนนี้<b>ไม่มีอยู่ในไฟล์ Excel ใหม่</b> ตัวเลขฐานมาจาก Omni (PEM105) ในไฟล์ใหม่ ส่วนยอดเพิ่มต่อสมาชิกใช้สมมติฐานจาก Dashboard เดิม (5 ราย = +66.6 MB PO / +18.4 MB GP ต่อปี) และคิดแบบสะสมตามจำนวนสมาชิกที่เพิ่มขึ้น แก้ค่าในช่องด้านล่างได้</div>
+  <div class="inputs">
+    <label>สมาชิกปี 2569 (ราย)<input type="number" id="inc-base" value="87" min="0"></label>
+    <label>เพิ่มต่อปี (ราย)<input type="number" id="inc-add" value="5" min="0"></label>
+    <label>PO ต่อสมาชิก/ปี (MB)<input type="number" id="inc-rev" value="13.325" step="0.001" min="0"></label>
+    <label>GP ต่อสมาชิก/ปี (MB)<input type="number" id="inc-gp" value="3.688" step="0.001" min="0"></label>
+  </div>
+  <div class="kpis" id="inc-kpis"></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><div><h2 id="inc-title"></h2><div class="sub">ล้านบาท (MB) · ฐาน + ยอดจาก Channel Member ใหม่</div></div>
+        <div class="seg" data-metric="inc"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
+      <div class="chart"><canvas id="inc-bar"></canvas></div><div class="legend" id="inc-legend"></div>
+    </div>
+    <div class="card"><h2>%GP Margin — Base vs Total</h2><div class="sub">รวม Channel Member ใหม่</div><div class="chart"><canvas id="inc-gpm"></canvas></div><div class="legend" id="inc-gpm-legend"></div></div>
+  </div>
+  <div class="card"><h2>สรุปการเพิ่ม Channel Member</h2><div class="sub">หน่วย: ล้านบาท (MB)</div><div class="tbl-wrap"><table id="inc-tbl"></table></div></div>
+</section>
+
+<footer id="footer"></footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const YEARS = Array.from({length: 11}, (_, i) => 2566 + i); // B.E. 2566-2576
+const FC_YEARS = YEARS.slice(3);                             // 2569-2576
+const LAST = 2576, FIRST_FC = 2570;
+const SLOTS = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const sum = a => a.reduce((s, v) => s + (v || 0), 0);
+const addArr = (a, b) => a.map((v, i) => v + (b[i] || 0));
+const f1 = v => Math.abs(v) < 0.05 ? '—' : v.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+const pct = v => isFinite(v) ? v.toFixed(1) + '%' : '—';
+const cagr = (a, b, n) => (a > 0 && b > 0) ? ((b / a) ** (1 / n) - 1) * 100 : null;
+const cagrHtml = c => c == null ? '<span class="z">N/A</span>' : `<span class="${c >= 0 ? 'up' : 'dn'}">${c >= 0 ? '▲' : '▼'} ${Math.abs(c).toFixed(1)}%</span>`;
+const METRIC_NAME = {po: 'PO Receive', gp: 'GP'};
+const state = {omni: 'po', npd: 'po', channel: 'po', inc: 'po'};
+const charts = {};
+
+// Fixed color per entity (by order of size in 2576 PO), so toggles never repaint.
+function colorMap(items, n = 7) {
+  const ranked = [...items].sort((a, b) => b.po[b.po.length - 1] - a.po[a.po.length - 1] || sum(b.po) - sum(a.po));
+  const map = {};
+  ranked.forEach((it, i) => map[it.name] = i < n ? SLOTS[i] : '--other');
+  return {map, top: ranked.slice(0, n).map(i => i.name)};
+}
+function stackSeries(items, metric, cm) {
+  const top = items.filter(i => cm.top.includes(i.name)).sort((a, b) => cm.top.indexOf(a.name) - cm.top.indexOf(b.name));
+  const rest = items.filter(i => !cm.top.includes(i.name));
+  const s = top.map(i => ({name: i.name, data: i[metric], color: cm.map[i.name]}));
+  if (rest.length && sum(rest.flatMap(r => r[metric])) > 0)
+    s.push({name: `Others (${rest.length})`, data: rest.reduce((a, r) => addArr(a, r[metric]), rest[0][metric].map(() => 0)), color: '--other'});
+  return s;
+}
+
+// ── Chart.js plugins ─────────────────────────────────────────
+const totalsPlugin = {id: 'totals', afterDatasetsDraw(ch) {
+  if (!ch.options.plugins.totals?.show) return;
+  const {ctx, scales: {x, y}} = ch;
+  if (x.width / ch.data.labels.length < 44) return;
+  ctx.save(); ctx.font = '600 11px ' + css('--font'); ctx.fillStyle = css('--ink'); ctx.textAlign = 'center';
+  ch.data.labels.forEach((_, i) => {
+    const t = ch.data.datasets.filter(d => d.type !== 'line' && !ch.getDatasetMeta(ch.data.datasets.indexOf(d)).hidden).reduce((s, d) => s + (d.data[i] || 0), 0);
+    if (t > 0) ctx.fillText(t.toFixed(1), x.getPixelForValue(i), y.getPixelForValue(t) - 6);
+  });
+  ctx.restore();
+}};
+const dividerPlugin = {id: 'divider', afterDraw(ch) {
+  const at = ch.options.plugins.divider?.at; if (at == null) return;
+  const {ctx, scales: {x}, chartArea: {top, bottom}} = ch;
+  const px = (x.getPixelForValue(at - 1) + x.getPixelForValue(at)) / 2;
+  ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = css('--faint'); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font = '500 11px ' + css('--font'); ctx.fillStyle = css('--muted');
+  const lbl = '◀ Actual / Base';
+  if (px - 6 - ctx.measureText(lbl).width > ch.chartArea.left) { ctx.textAlign = 'right'; ctx.fillText(lbl, px - 6, top - 8); }
+  ctx.textAlign = 'left'; ctx.fillStyle = css('--accent'); ctx.fillText('Forecast ▶', px + 6, top - 8);
+  ctx.restore();
+}};
+Chart.register(totalsPlugin, dividerPlugin);
+
+function baseOpts() {
+  Chart.defaults.font.family = css('--font');
+  Chart.defaults.color = css('--muted');
+  return {
+    responsive: true, maintainAspectRatio: false, animation: {duration: 250},
+    interaction: {mode: 'index', intersect: false},
+    layout: {padding: {top: 30}},
+    plugins: {legend: {display: false},
+      tooltip: {backgroundColor: css('--surface'), titleColor: css('--ink'), bodyColor: css('--ink'), borderColor: css('--line'), borderWidth: 1, padding: 10, boxPadding: 4,
+        itemSort: (a, b) => b.datasetIndex - a.datasetIndex}},
+    scales: {
+      x: {stacked: true, grid: {display: false}, border: {color: css('--line')}, ticks: {color: css('--muted')}},
+      y: {stacked: true, grid: {color: css('--grid')}, border: {display: false}, ticks: {color: css('--muted')}, title: {display: true, text: 'MB', color: css('--faint')}}
+    }
+  };
+}
+function mk(id, cfg) { charts[id]?.destroy(); charts[id] = new Chart(document.getElementById(id), cfg); }
+
+function stackedBar(id, labels, series, {divider, legendId, suffix = 'MB'} = {}) {
+  const o = baseOpts();
+  o.plugins.totals = {show: true}; o.plugins.divider = {at: divider};
+  o.plugins.tooltip.callbacks = {
+    title: i => 'ปี ' + i[0].label,
+    label: c => ` ${c.dataset.label}: ${f1(c.raw)} ${suffix}`,
+    footer: items => 'รวม: ' + f1(sum(items.map(i => i.raw))) + ' ' + suffix};
+  mk(id, {type: 'bar', data: {labels, datasets: series.map(s => ({
+    type: 'bar', label: s.name, data: s.data, backgroundColor: css(s.color),
+    borderColor: css('--surface'), borderWidth: {top: 2}, borderSkipped: 'bottom', borderRadius: 2, maxBarThickness: 44}))}, options: o});
+  if (legendId) document.getElementById(legendId).innerHTML = series.map(s => `<span><i style="background:var(${s.color})"></i>${s.name}</span>`).join('');
+}
+function lineChart(id, labels, series, {divider, unit = '%', min, legendId} = {}) {
+  const o = baseOpts();
+  o.scales.x.stacked = o.scales.y.stacked = false;
+  o.scales.y.title.text = unit; o.scales.y.suggestedMin = min;
+  o.scales.y.ticks.callback = v => v + unit;
+  o.plugins.divider = {at: divider};
+  o.plugins.tooltip.callbacks = {title: i => 'ปี ' + i[0].label, label: c => ` ${c.dataset.label}: ${c.raw == null ? '—' : c.raw.toFixed(1) + unit}`};
+  o.plugins.lastLabel = true;
+  mk(id, {type: 'line', data: {labels, datasets: series.map(s => ({
+    label: s.name, data: s.data, borderColor: css(s.color), backgroundColor: css(s.color), borderWidth: 2, borderDash: s.dash || [],
+    pointRadius: 4, pointHoverRadius: 6, pointBorderColor: css('--surface'), pointBorderWidth: 2, tension: 0, spanGaps: true}))}, options: o});
+  if (legendId) document.getElementById(legendId).innerHTML = series.map(s => `<span><i style="background:var(${s.color})"></i>${s.name}</span>`).join('');
+}
+function hbar(id, labels, data, color) {
+  const o = baseOpts();
+  o.indexAxis = 'y'; o.scales.x.stacked = o.scales.y.stacked = false;
+  o.interaction = {mode: 'nearest', axis: 'y', intersect: false};
+  o.scales.x.grid = {color: css('--grid')}; o.scales.y.grid = {display: false};
+  o.scales.y.title.display = false; o.scales.x.ticks.callback = v => v + '%';
+  o.plugins.tooltip.callbacks = {label: c => ` %GP: ${c.raw.toFixed(1)}%`};
+  mk(id, {type: 'bar', data: {labels, datasets: [{data, backgroundColor: css(color), borderRadius: 2, borderSkipped: 'left', maxBarThickness: 16}]}, options: o});
+}
+
+// ── KPI + table ──────────────────────────────────────────────
+function kpis(id, list) {
+  document.getElementById(id).innerHTML = list.map(k => `<div class="kpi"><div class="l">${k.l}</div><div class="v">${k.v}${k.u ? `<small>${k.u}</small>` : ''}</div><div class="s">${k.s || ''}</div></div>`).join('');
+}
+function table(id, items, years, metric, {firstFc, cagrFrom, childLabel = ''}) {
+  const n = LAST - cagrFrom, li = years.length - 1, ci = years.indexOf(cagrFrom);
+  const head = `<tr><th>${childLabel}</th>${years.map(y => `<th class="${y >= firstFc ? 'fc' : ''}">${y}</th>`).join('')}<th>CAGR ${cagrFrom % 100}–${LAST % 100}</th><th>%GP ${LAST}</th></tr>`;
+  const row = (it, cls, gid) => {
+    const v = it[metric];
+    return `<tr class="${cls}" ${gid != null ? `data-g="${gid}"` : ''} ${cls === 'child' ? 'hidden' : ''}><td>${it.name}</td>${v.map(x => `<td class="${Math.abs(x || 0) < .05 ? 'z' : ''}">${x == null ? '' : f1(x)}</td>`).join('')}<td>${cagrHtml(cagr(v[ci], v[li], n))}</td><td>${it.po[li] > 0 ? pct(it.gp[li] / it.po[li] * 100) : '<span class="z">—</span>'}</td></tr>`;
+  };
+  const sorted = [...items].sort((a, b) => b.po[li] - a.po[li] || sum(b.po) - sum(a.po));
+  const pad = arr => Array(years.length - arr.length).fill(null).concat(arr);
+  const nz = x => Math.abs(sum(x.po)) > 1e-6 || Math.abs(sum(x.gp)) > 1e-6;
+  let body = sorted.filter(nz).map((it, gi) => {
+    const kids = (it.children || []).filter(nz).sort((a, b) => b.po[b.po.length - 1] - a.po[a.po.length - 1]);
+    return row(it, kids.length ? 'parent' : '', gi) + kids.map(c => row({...c, po: pad(c.po), gp: pad(c.gp)}, 'child', gi)).join('');
+  }).join('');
+  const tot = {name: 'รวมทั้งหมด', po: years.map((_, i) => sum(items.map(x => x.po[i]))), gp: years.map((_, i) => sum(items.map(x => x.gp[i])))};
+  body += row(tot, 'total');
+  const t = document.getElementById(id);
+  t.innerHTML = `<thead>${head}</thead><tbody>${body}</tbody>`;
+  t.querySelectorAll('tr.parent').forEach(tr => tr.onclick = () => {
+    const open = tr.classList.toggle('open');
+    t.querySelectorAll(`tr.child[data-g="${tr.dataset.g}"]`).forEach(c => c.hidden = !open);
+  });
+}
+document.querySelectorAll('[data-expand],[data-collapse]').forEach(b => b.onclick = () => {
+  const open = !!b.dataset.expand, t = document.getElementById((b.dataset.expand || b.dataset.collapse) + '-tbl');
+  t.querySelectorAll('tr.parent').forEach(tr => tr.classList.toggle('open', open));
+  t.querySelectorAll('tr.child').forEach(c => c.hidden = !open);
+});
+
+// ── Omni ─────────────────────────────────────────────────────
+const omniTot = {po: YEARS.map((_, i) => sum(DATA.omni.map(g => g.po[i]))), gp: YEARS.map((_, i) => sum(DATA.omni.map(g => g.gp[i])))};
+const omniCM = colorMap(DATA.omni.map(g => ({...g, po: g.po})));
+function renderOmni() {
+  const m = state.omni, T = omniTot, i69 = 3, i70 = 4, iL = 10;
+  kpis('omni-kpis', [
+    {l: 'PO Receive 2569 (Base)', v: f1(T.po[i69]), u: 'MB'},
+    {l: `PO Receive ${LAST}`, v: f1(T.po[iL]), u: 'MB', s: `เทียบ 2569: ${cagrHtml((T.po[iL] / T.po[i69] - 1) * 100)}`},
+    {l: `CAGR PO 2570–${LAST}`, v: pct(cagr(T.po[i70], T.po[iL], LAST - FIRST_FC)), s: 'Compound annual growth'},
+    {l: 'GP 2569 (Base)', v: f1(T.gp[i69]), u: 'MB'},
+    {l: `GP ${LAST}`, v: f1(T.gp[iL]), u: 'MB', s: `CAGR 70–76: ${pct(cagr(T.gp[i70], T.gp[iL], LAST - FIRST_FC))}`},
+    {l: `%GP ${LAST}`, v: pct(T.gp[iL] / T.po[iL] * 100), s: `2569: ${pct(T.gp[i69] / T.po[i69] * 100)}`},
+  ]);
+  document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product 2566–${LAST}`;
+  document.getElementById('omni-tbl-title').textContent = `${METRIC_NAME[m]} by Core Product 2566–${LAST} (MB)`;
+  stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: 4, legendId: 'omni-legend'});
+  lineChart('omni-gpm', YEARS, [{name: '%GP', data: T.po.map((v, i) => v ? T.gp[i] / v * 100 : null), color: '--s1'}], {divider: 4});
+  table('omni-tbl', DATA.omni, YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Category'});
+}
+
+// ── NPD ──────────────────────────────────────────────────────
+const npdCM = colorMap(DATA.npd);
+function renderNpd() {
+  const m = state.npd, L = FC_YEARS.length - 1;
+  const tp = FC_YEARS.map((_, i) => sum(DATA.npd.map(g => g.po[i]))), tg = FC_YEARS.map((_, i) => sum(DATA.npd.map(g => g.gp[i])));
+  const peak = tp.indexOf(Math.max(...tp));
+  const types = DATA.npd.flatMap(g => g.children).filter(c => sum(c.po) > 0).length;
+  kpis('npd-kpis', [
+    {l: 'NPD PO 2569 (Base)', v: f1(tp[0]), u: 'MB'},
+    {l: 'NPD PO 2570', v: f1(tp[1]), u: 'MB'},
+    {l: `NPD PO ${LAST}`, v: f1(tp[L]), u: 'MB', s: `สูงสุด: ${FC_YEARS[peak]} (${f1(tp[peak])} MB)`},
+    {l: `NPD GP ${LAST}`, v: f1(tg[L]), u: 'MB', s: `%GP ${pct(tg[L] / tp[L] * 100)}`},
+    {l: 'NPD PO รวม 2570–2576', v: f1(sum(tp.slice(1))), u: 'MB', s: `GP รวม ${f1(sum(tg.slice(1)))} MB`},
+    {l: 'จำนวน Product Type (New)', v: types, u: 'รายการ', s: 'ที่มียอดอย่างน้อย 1 ปี'},
+  ]);
+  document.getElementById('npd-title').textContent = `NPD ${METRIC_NAME[m]} by Core Product 2569–${LAST}`;
+  document.getElementById('npd-tbl-title').textContent = `NPD ${METRIC_NAME[m]} by Core Product 2569–${LAST} (MB)`;
+  stackedBar('npd-bar', FC_YEARS, stackSeries(DATA.npd, m, npdCM), {divider: 1, legendId: 'npd-legend'});
+  lineChart('npd-share', FC_YEARS, [{name: 'NPD share', data: tp.map((v, i) => omniTot.po[i + 3] ? v / omniTot.po[i + 3] * 100 : null), color: '--s2'}], {divider: 1, min: 0});
+  table('npd-tbl', DATA.npd, FC_YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Type'});
+}
+
+// ── Channel ──────────────────────────────────────────────────
+const chCM = colorMap(DATA.channel);
+function renderChannel() {
+  const m = state.channel, L = FC_YEARS.length - 1;
+  const rk = [...DATA.channel].sort((a, b) => b.po[L] - a.po[L]);
+  const tp = sum(DATA.channel.map(c => c.po[L])), tg = sum(DATA.channel.map(c => c.gp[L]));
+  kpis('channel-kpis', [
+    {l: `อันดับ 1 ปี ${LAST}`, v: f1(rk[0].po[L]), u: 'MB', s: rk[0].name},
+    {l: `อันดับ 2 ปี ${LAST}`, v: f1(rk[1].po[L]), u: 'MB', s: rk[1].name},
+    {l: `อันดับ 3 ปี ${LAST}`, v: f1(rk[2].po[L]), u: 'MB', s: rk[2].name},
+    {l: `PO รวม ${LAST}`, v: f1(tp), u: 'MB', s: `${DATA.channel.length} Channel`},
+    {l: `GP รวม ${LAST}`, v: f1(tg), u: 'MB'},
+    {l: `%GP ${LAST}`, v: pct(tg / tp * 100)},
+  ]);
+  document.getElementById('channel-title').textContent = `${METRIC_NAME[m]} by Channel 2569–${LAST}`;
+  document.getElementById('channel-tbl-title').textContent = `${METRIC_NAME[m]} by Channel / Customer Segment 2569–${LAST} (MB)`;
+  stackedBar('channel-bar', FC_YEARS, stackSeries(DATA.channel, m, chCM), {divider: 1, legendId: 'channel-legend'});
+  const withPo = rk.filter(c => c.po[L] > 0);
+  hbar('channel-gpm', withPo.map(c => c.name.length > 22 ? c.name.slice(0, 21) + '…' : c.name), withPo.map(c => c.gp[L] / c.po[L] * 100), '--s1');
+  table('channel-tbl', DATA.channel, FC_YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Channel / Core Product'});
+}
+
+// ── Increase Channel Member ─────────────────────────────────
+function renderInc() {
+  const num = id => Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+  const base = num('inc-base'), add = num('inc-add'), rv = num('inc-rev'), gv = num('inc-gp'), m = state.inc;
+  const bp = omniTot.po.slice(3), bg = omniTot.gp.slice(3);
+  const newM = FC_YEARS.map((_, i) => add * i);
+  const ip = newM.map(n => n * rv), ig = newM.map(n => n * gv);
+  const L = FC_YEARS.length - 1;
+  kpis('inc-kpis', [
+    {l: 'Channel Member 2569', v: base, u: 'ราย'},
+    {l: `Channel Member ${LAST}`, v: base + newM[L], u: 'ราย', s: `เพิ่ม +${newM[L]} ราย`},
+    {l: `PO เพิ่ม ${LAST}`, v: f1(ip[L]), u: 'MB', s: `รวม 2570–${LAST}: ${f1(sum(ip))} MB`},
+    {l: `PO รวม ${LAST}`, v: f1(bp[L] + ip[L]), u: 'MB', s: `ฐาน ${f1(bp[L])} MB`},
+    {l: `GP เพิ่ม ${LAST}`, v: f1(ig[L]), u: 'MB', s: `รวม 2570–${LAST}: ${f1(sum(ig))} MB`},
+    {l: `%GP ${LAST} (รวม)`, v: pct((bg[L] + ig[L]) / (bp[L] + ip[L]) * 100)},
+  ]);
+  document.getElementById('inc-title').textContent = `${METRIC_NAME[m]} — Base vs Increase Channel Member`;
+  stackedBar('inc-bar', FC_YEARS, [
+    {name: `${METRIC_NAME[m]} ฐาน (Omni PEM105)`, data: m === 'po' ? bp : bg, color: '--s1'},
+    {name: `${METRIC_NAME[m]} เพิ่ม (Channel Member ใหม่)`, data: m === 'po' ? ip : ig, color: '--s2'}], {divider: 1, legendId: 'inc-legend'});
+  lineChart('inc-gpm', FC_YEARS, [
+    {name: '%GP ฐาน', data: bp.map((v, i) => bg[i] / v * 100), color: '--s1', dash: [5, 4]},
+    {name: '%GP รวม', data: bp.map((v, i) => (bg[i] + ig[i]) / (v + ip[i]) * 100), color: '--s2'}], {divider: 1, legendId: 'inc-gpm-legend'});
+  const rows = FC_YEARS.map((y, i) => `<tr><td>${y}${i === 0 ? ' (ฐาน)' : ''}</td><td>${base + newM[i]}</td><td>${newM[i] ? '+' + newM[i] : '—'}</td>
+    <td>${f1(bp[i])}</td><td>${ip[i] ? '+' + f1(ip[i]) : '—'}</td><td><b>${f1(bp[i] + ip[i])}</b></td>
+    <td>${f1(bg[i])}</td><td>${ig[i] ? '+' + f1(ig[i]) : '—'}</td><td><b>${f1(bg[i] + ig[i])}</b></td><td>${pct((bg[i] + ig[i]) / (bp[i] + ip[i]) * 100)}</td></tr>`).join('');
+  document.getElementById('inc-tbl').innerHTML = `<thead><tr><th>ปี</th><th>จำนวนสมาชิก</th><th>เพิ่มจากปีฐาน</th><th>PO ฐาน</th><th>PO เพิ่ม</th><th>PO รวม</th><th>GP ฐาน</th><th>GP เพิ่ม</th><th>GP รวม</th><th>%GP รวม</th></tr></thead>
+    <tbody>${rows}<tr class="total"><td>รวม 2570–${LAST}</td><td></td><td></td><td>${f1(sum(bp.slice(1)))}</td><td>+${f1(sum(ip))}</td><td>${f1(sum(bp.slice(1)) + sum(ip))}</td><td>${f1(sum(bg.slice(1)))}</td><td>+${f1(sum(ig))}</td><td>${f1(sum(bg.slice(1)) + sum(ig))}</td><td></td></tr></tbody>`;
+}
+document.querySelectorAll('#tab-inc input').forEach(i => i.oninput = renderInc);
+
+// ── Wiring ───────────────────────────────────────────────────
+const RENDER = {omni: renderOmni, npd: renderNpd, channel: renderChannel, inc: renderInc};
+let current = 'omni';
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('main section, .wrap > section').forEach(s => s.hidden = s.id !== 'tab-' + b.dataset.tab);
+  current = b.dataset.tab; RENDER[current]();
+  try { localStorage.setItem('omni-tab', current); } catch (e) {}
+});
+document.querySelectorAll('.seg').forEach(seg => seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+  seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  state[seg.dataset.metric] = b.dataset.m; RENDER[seg.dataset.metric]();
+}));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RENDER[current]());
+new MutationObserver(() => RENDER[current]()).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+
+document.getElementById('srcline').textContent = `PDEM · Omni Channel (Responsible section PEM105) · PO Receive & GP · ปี 2566–${LAST} · ที่มา: ${DATA.source}`;
+document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ Q (PO Receive) และ R (GP) · ${DATA.rows.toLocaleString()} แถว · ปี 2566–2568 เป็นยอด Actual จาก Dashboard เดิม (Omni_Forcast_Data_2573_adj.xlsx) · PDEM Confidential`;
+let start = 'omni';
+try { start = localStorage.getItem('omni-tab') || 'omni'; } catch (e) {}
+(document.querySelector(`.tabs button[data-tab="${start}"]`) || document.querySelector('.tabs button')).click();
+</script>
+</body>
+</html>
