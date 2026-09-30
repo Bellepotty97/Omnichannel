@@ -467,7 +467,7 @@ document.querySelectorAll('.yr').forEach(e => e.textContent = YR);
 document.querySelectorAll('.hist').forEach(e => e.textContent = `${FIRST}–${BASE - 1}`);
 document.querySelectorAll('.last').forEach(e => e.textContent = LAST);
 document.getElementById('srcline').textContent = `PDEM · Omni Channel (Responsible section PEM105) · PO Receive & GP · ปี ${FIRST}–${LAST} · ที่มา: ${DATA.source}`;
-document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ Q (PO Receive) และ R (GP) · ${DATA.rows.toLocaleString()} แถว · ปี ${FIRST}–${BASE - 1} เป็นยอด Actual (รวม: 2567 = 955 / GP 318, 2568 = 870 / GP 317 MB) แยกกลุ่มตามสัดส่วนจาก Dashboard เดิม · PDEM Confidential`;
+document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ R (PO Receive) และ T (%GP) · GP = PO × %GP · ${DATA.rows.toLocaleString()} แถว · ปี ${FIRST}–${BASE - 1} เป็นยอด Actual (รวม: 2567 = 955 / GP 318, 2568 = 870 / GP 317 MB) แยกกลุ่มตามสัดส่วนจาก Dashboard เดิม · PDEM Confidential`;
 let start = 'omni';
 try { start = localStorage.getItem('omni-tab') || 'omni'; } catch (e) {}
 (document.querySelector(`.tabs button[data-tab="${start}"]`) || document.querySelector('.tabs button')).click();

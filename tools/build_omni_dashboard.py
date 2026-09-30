@@ -3,8 +3,8 @@
 Usage: python3 tools/build_omni_dashboard.py <workbook.xlsx>
 
 Reads sheet "Revenue _ R.1", keeps rows where Revenue Stream Type is Omni Channel
-and Responsible section / Person starts with PEM105, and uses column Q
-(PO Receive, MB) and column R (GP, MB). Years 2026-2033 = B.E. 2569-2576.
+and Responsible section / Person starts with PEM105, and uses PO Receive (MB) and
+%GP (R.4 workbook: columns R and T); GP = PO Receive x %GP. Years 2026-2033 = B.E. 2569-2576.
 """
 import base64
 import collections
@@ -21,7 +21,11 @@ METHOD_IMG = ROOT / "assets" / "forecasting-methodology.jpg"
 
 SHEET = "Revenue _ R.1"
 YEARS_CE = list(range(2026, 2034))  # 2569-2576
-COL = dict(year=0, cat=2, ptype=3, status=4, stream=6, segment=9, person=14, po=16, gp=17)
+# Columns are found by header name, so inserted columns (e.g. "Company" in R.4) don't break the build.
+# GP = PO Receive x %GP per row (R.4: columns R and T).
+HEADERS = dict(year="Year", cat="Product Category", ptype="Product Type", status="Status of Product",
+               stream="Revenue Stream Type", segment="Customer Segment or KA or Country",
+               person="Responsible section / Person", po="PO Receive (MB)", gpm="%GP")
 
 # Product Category -> core product group (same groups as the previous dashboard;
 # B.E. 2569 totals per group match it exactly).
@@ -117,8 +121,10 @@ def rounded(node):
 
 def main(path):
     ws = openpyxl.load_workbook(path, data_only=True, read_only=True)[SHEET]
+    head = [" ".join(str(h).split()) if h is not None else "" for h in next(ws.iter_rows(max_row=1, values_only=True))]
+    COL = {k: head.index(v) for k, v in HEADERS.items()}
     rows = [
-        r for r in ws.iter_rows(min_row=2, max_col=25, values_only=True)
+        r for r in ws.iter_rows(min_row=2, values_only=True)
         if r[COL["stream"]] and "Omni" in str(r[COL["stream"]])
         and r[COL["person"]] and str(r[COL["person"]]).strip().startswith("PEM105")
         and r[COL["year"]] in YEARS_CE
@@ -129,7 +135,8 @@ def main(path):
     segs, seg_groups = tree(), collections.defaultdict(tree)
     for r in rows:
         yi = YEARS_CE.index(r[COL["year"]])
-        po, gp = float(r[COL["po"]] or 0), float(r[COL["gp"]] or 0)
+        po = float(r[COL["po"]] or 0)
+        gp = po * float(r[COL["gpm"]] or 0)
         cat, ptype = clean(r[COL["cat"]]), clean(r[COL["ptype"]])
         g = group_of(cat, ptype)
         add(groups[g], yi, po, gp)
