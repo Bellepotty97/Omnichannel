@@ -129,7 +129,7 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
         <div class="seg" data-metric="omni"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
       <div class="chart"><canvas id="omni-bar"></canvas></div><div class="legend" id="omni-legend"></div>
     </div>
-    <div class="card"><h2>%GP Margin</h2><div class="sub">GP ÷ PO Receive</div><div class="chart"><canvas id="omni-gpm"></canvas></div></div>
+    <div class="card"><h2>%GP Margin</h2><div class="sub">GP ÷ PO Receive · 2569 Base · <span class="yr"></span> Forecast</div><div class="chart"><canvas id="omni-gpm"></canvas></div></div>
   </div>
   <div class="card">
     <h2 id="omni-tbl-title"></h2><div class="sub">คลิกชื่อกลุ่มเพื่อดู Product Category · <span class="hist"></span> มีเฉพาะระดับกลุ่ม (ปรับยอดรวมตามตัวเลข Actual ล่าสุด)</div>
@@ -385,7 +385,7 @@ function renderOmni() {
   document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST}`;
   document.getElementById('omni-tbl-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST} (MB)`;
   stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: BI + 1, legendId: 'omni-legend', actual: ACTUALS});
-  lineChart('omni-gpm', YEARS, [{name: '%GP', data: T.po.map((v, i) => v ? T.gp[i] / v * 100 : null), color: '--s1'}], {divider: BI + 1});
+  lineChart('omni-gpm', FC_YEARS, [{name: '%GP', data: T.po.slice(BI).map((v, i) => v ? T.gp[i + BI] / v * 100 : null), color: '--s1'}], {divider: 1});
   table('omni-tbl', DATA.omni, YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Category'});
 }
 
