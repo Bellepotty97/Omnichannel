@@ -258,7 +258,29 @@ const dividerPlugin = {id: 'divider', afterDraw(ch) {
   ctx.textAlign = 'left'; ctx.fillStyle = css('--accent'); ctx.fillText('Forecast ▶', px + 6, top - 8);
   ctx.restore();
 }};
-Chart.register(totalsPlugin, dividerPlugin);
+// Actual figures shown as a small callout above a year's bar (Omni tab). {B.E. year: {po, gp}} in MB.
+const ACTUALS = {2567: {po: 898, gp: 295}};
+const actualPlugin = {id: 'actual', afterDatasetsDraw(ch) {
+  const act = ch.options.plugins.actual?.data; if (!act) return;
+  const {ctx, scales: {x, y}} = ch;
+  const slot = x.width / ch.data.labels.length;
+  ch.data.labels.forEach((yr, i) => {
+    const a = act[yr]; if (!a) return;
+    const top = ch.data.datasets.reduce((s, d) => s + (d.data[i] || 0), 0);
+    const lines = [['Actual', css('--accent'), '700'], [`Revenue ${f1(a.po)}`, css('--ink'), '600'], [`GP ${f1(a.gp)} (${pct(a.gp / a.po * 100)})`, css('--ink'), '600']];
+    const fs = slot < 60 ? 9 : 11, lh = fs + 3, pad = 5;
+    ctx.save();
+    ctx.font = `600 ${fs}px ` + css('--font');
+    const w = Math.max(...lines.map(l => ctx.measureText(l[0]).width)) + pad * 2, h = lines.length * lh + pad * 2 - 3;
+    const cx = x.getPixelForValue(i), bx = cx - w / 2, by = y.getPixelForValue(top) - 22 - h;
+    ctx.fillStyle = css('--surface'); ctx.strokeStyle = css('--accent'); ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, w, h, 5) : ctx.rect(bx, by, w, h); ctx.fill(); ctx.stroke();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    lines.forEach(([t, c, wgt], k) => { ctx.font = `${wgt} ${fs}px ` + css('--font'); ctx.fillStyle = c; ctx.fillText(t, cx, by + pad + k * lh); });
+    ctx.restore();
+  });
+}};
+Chart.register(totalsPlugin, dividerPlugin, actualPlugin);
 
 function baseOpts() {
   Chart.defaults.font.family = css('--font');
@@ -278,13 +300,14 @@ function baseOpts() {
 }
 function mk(id, cfg) { charts[id]?.destroy(); charts[id] = new Chart(document.getElementById(id), cfg); }
 
-function stackedBar(id, labels, series, {divider, legendId, suffix = 'MB'} = {}) {
+function stackedBar(id, labels, series, {divider, legendId, suffix = 'MB', actual} = {}) {
   const o = baseOpts();
-  o.plugins.totals = {show: true}; o.plugins.divider = {at: divider};
+  o.plugins.totals = {show: true}; o.plugins.divider = {at: divider}; o.plugins.actual = {data: actual};
   o.plugins.tooltip.callbacks = {
     title: i => 'ปี ' + i[0].label,
     label: c => ` ${c.dataset.label}: ${f1(c.raw)} ${suffix}`,
-    footer: items => 'รวม: ' + f1(sum(items.map(i => i.raw))) + ' ' + suffix};
+    footer: items => { const a = actual?.[items[0].label];
+      return 'รวม: ' + f1(sum(items.map(i => i.raw))) + ' ' + suffix + (a ? `\nActual: Revenue ${f1(a.po)} · GP ${f1(a.gp)} MB` : ''); }};
   mk(id, {type: 'bar', data: {labels, datasets: series.map(s => ({
     type: 'bar', label: s.name, data: s.data, backgroundColor: css(s.color),
     borderColor: css('--surface'), borderWidth: {top: 2}, borderSkipped: 'bottom', borderRadius: 2, maxBarThickness: 44}))}, options: o});
@@ -361,7 +384,7 @@ function renderOmni() {
   ]);
   document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST}`;
   document.getElementById('omni-tbl-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST} (MB)`;
-  stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: BI + 1, legendId: 'omni-legend'});
+  stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: BI + 1, legendId: 'omni-legend', actual: ACTUALS});
   lineChart('omni-gpm', YEARS, [{name: '%GP', data: T.po.map((v, i) => v ? T.gp[i] / v * 100 : null), color: '--s1'}], {divider: BI + 1});
   table('omni-tbl', DATA.omni, YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Category'});
 }
