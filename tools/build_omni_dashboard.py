@@ -6,6 +6,7 @@ Reads sheet "Revenue _ R.1", keeps rows where Revenue Stream Type is Omni Channe
 and Responsible section / Person starts with PEM105, and uses column Q
 (PO Receive, MB) and column R (GP, MB). Years 2026-2033 = B.E. 2569-2576.
 """
+import base64
 import collections
 import json
 import pathlib
@@ -16,6 +17,7 @@ import openpyxl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "tools" / "omni-dashboard.template.html"
 OUT = ROOT / "omni-dashboard.html"
+METHOD_IMG = ROOT / "assets" / "forecasting-methodology.jpg"
 
 SHEET = "Revenue _ R.1"
 YEARS_CE = list(range(2026, 2034))  # 2569-2576
@@ -139,7 +141,10 @@ def main(path):
         "npd": [{"name": g, **rounded(npd[g]), "children": children(npd_types[g])} for g in sorted(npd)],
         "channel": [{"name": s, **rounded(segs[s]), "children": children(seg_groups[s])} for s in segs],
     }
-    html = TEMPLATE.read_text(encoding="utf-8").replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
+    img = "data:image/jpeg;base64," + base64.b64encode(METHOD_IMG.read_bytes()).decode()
+    html = (TEMPLATE.read_text(encoding="utf-8")
+            .replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False))
+            .replace("__METHOD_IMG__", img))
     OUT.write_text(html, encoding="utf-8")
 
     tot = [sum(g["po"][i] for g in omni) for i in range(11)]

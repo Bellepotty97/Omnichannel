@@ -34,6 +34,8 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5}
 .wrap{max-width:1280px;margin:0 auto;padding:24px 16px 48px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.hd-text{min-width:0}
 header h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
 header p{margin:4px 0 0;color:var(--muted);font-size:13px}
 .tabs{display:flex;gap:4px;margin:20px 0 16px;border-bottom:1px solid var(--line);overflow-x:auto}
@@ -84,15 +86,33 @@ td.z{color:var(--faint)}
 .inputs{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
 .inputs label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 .inputs input{font:inherit;font-variant-numeric:tabular-nums;width:130px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.method-btn{font:inherit;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.method-btn:hover{border-color:var(--accent);color:var(--accent)}
+.method-btn:focus-visible,.dlg-x:focus-visible,.tabs button:focus-visible,.seg button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+dialog{border:1px solid var(--line);border-radius:12px;padding:0;background:var(--surface);color:var(--ink);width:min(1100px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
+dialog::backdrop{background:rgba(10,18,32,.55)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+.dlg-head h2{margin:0;font-size:15px}
+.dlg-x{font:inherit;font-size:16px;line-height:1;border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px}
+.dlg-body{padding:16px;overflow:auto}
+.dlg-body img{display:block;width:100%;height:auto;border-radius:6px;background:#fff}
 footer{color:var(--faint);font-size:12px;margin-top:24px}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>Omni Channel — PO &amp; GP Forecast</h1>
-  <p id="srcline"></p>
+  <div class="hd-text"><h1>Omni Channel — PO &amp; GP Forecast</h1><p id="srcline"></p></div>
+  <button type="button" class="method-btn" id="method-open" aria-haspopup="dialog">
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M2 13h12M3.5 10.5l3-3 2.5 2 4-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Forecasting Methodology
+  </button>
 </header>
+
+<dialog id="method-dlg" aria-labelledby="method-title">
+  <div class="dlg-head"><h2 id="method-title">Forecasting Methodology Selection</h2><button type="button" class="dlg-x" id="method-close" aria-label="ปิด">✕</button></div>
+  <div class="dlg-body"><img src="__METHOD_IMG__" alt="Forecasting Methodology Selection: เลือกใช้ Derived Demand โดยอ้างอิงปัจจัยภายนอก 8 ปัจจัย F1–F8 ได้แก่ PEA Capital Expenditure, MEA Capital Expenditure, Electricity Demand Growth, Renewable Energy YoY Growth, Thailand Construction CAGR, Industrial Estate Expansion Area, BOI Approved Investment Projects และ Thailand GDP Growth"></div>
+</dialog>
 
 <nav class="tabs" role="tablist">
   <button role="tab" aria-selected="true" data-tab="omni">Omni Channel</button>
@@ -105,7 +125,7 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
   <div class="kpis" id="omni-kpis"></div>
   <div class="grid2">
     <div class="card">
-      <div class="card-head"><div><h2 id="omni-title"></h2><div class="sub">ล้านบาท (MB) · 2566–2568 Actual · 2569 Base · 2570–2576 Forecast</div></div>
+      <div class="card-head"><div><h2 id="omni-title"></h2><div class="sub">ล้านบาท (MB) · 2566–2568 Actual · 2569 Base · <span class="yr"></span> Forecast</div></div>
         <div class="seg" data-metric="omni"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
       <div class="chart"><canvas id="omni-bar"></canvas></div><div class="legend" id="omni-legend"></div>
     </div>
@@ -123,7 +143,7 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
   <div class="kpis" id="npd-kpis"></div>
   <div class="grid2">
     <div class="card">
-      <div class="card-head"><div><h2 id="npd-title"></h2><div class="sub">ล้านบาท (MB) · 2569 Base · 2570–2576 Forecast</div></div>
+      <div class="card-head"><div><h2 id="npd-title"></h2><div class="sub">ล้านบาท (MB) · 2569 Base · <span class="yr"></span> Forecast</div></div>
         <div class="seg" data-metric="npd"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
       <div class="chart"><canvas id="npd-bar"></canvas></div><div class="legend" id="npd-legend"></div>
     </div>
@@ -144,7 +164,7 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
         <div class="seg" data-metric="channel"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
       <div class="chart"><canvas id="channel-bar"></canvas></div><div class="legend" id="channel-legend"></div>
     </div>
-    <div class="card"><h2>%GP by Channel — 2576</h2><div class="sub">เรียงตาม PO Receive ปี 2576</div><div class="chart"><canvas id="channel-gpm"></canvas></div></div>
+    <div class="card"><h2>%GP by Channel — <span class="last"></span></h2><div class="sub">เรียงตาม PO Receive ปี <span class="last"></span></div><div class="chart"><canvas id="channel-gpm"></canvas></div></div>
   </div>
   <div class="card">
     <h2 id="channel-tbl-title"></h2><div class="sub">คลิกชื่อ Channel เพื่อดู Core Product</div>
@@ -178,9 +198,13 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
 
 <script>
 const DATA = /*__DATA__*/null;
-const YEARS = Array.from({length: 11}, (_, i) => 2566 + i); // B.E. 2566-2576
-const FC_YEARS = YEARS.slice(3);                             // 2569-2576
-const LAST = 2576, FIRST_FC = 2570;
+const LAST = 2573, FIRST_FC = 2570;                          // show B.E. 2566-LAST (data runs to 2576)
+const YEARS = Array.from({length: LAST - 2566 + 1}, (_, i) => 2566 + i);
+const FC_YEARS = YEARS.slice(3);                             // 2569-LAST
+const cut = (x, n) => { x.po = x.po.slice(0, n); x.gp = x.gp.slice(0, n); };
+DATA.omni.forEach(g => { cut(g, YEARS.length); g.children.forEach(c => cut(c, FC_YEARS.length)); });
+[...DATA.npd, ...DATA.channel].forEach(g => { cut(g, FC_YEARS.length); g.children.forEach(c => cut(c, FC_YEARS.length)); });
+const YR = `${FIRST_FC}–${LAST}`, YR2 = `${FIRST_FC % 100}–${LAST % 100}`;
 const SLOTS = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const sum = a => a.reduce((s, v) => s + (v || 0), 0);
@@ -325,13 +349,13 @@ document.querySelectorAll('[data-expand],[data-collapse]').forEach(b => b.onclic
 const omniTot = {po: YEARS.map((_, i) => sum(DATA.omni.map(g => g.po[i]))), gp: YEARS.map((_, i) => sum(DATA.omni.map(g => g.gp[i])))};
 const omniCM = colorMap(DATA.omni.map(g => ({...g, po: g.po})));
 function renderOmni() {
-  const m = state.omni, T = omniTot, i69 = 3, i70 = 4, iL = 10;
+  const m = state.omni, T = omniTot, i69 = 3, i70 = 4, iL = YEARS.length - 1;
   kpis('omni-kpis', [
     {l: 'PO Receive 2569 (Base)', v: f1(T.po[i69]), u: 'MB'},
     {l: `PO Receive ${LAST}`, v: f1(T.po[iL]), u: 'MB', s: `เทียบ 2569: ${cagrHtml((T.po[iL] / T.po[i69] - 1) * 100)}`},
     {l: `CAGR PO 2570–${LAST}`, v: pct(cagr(T.po[i70], T.po[iL], LAST - FIRST_FC)), s: 'Compound annual growth'},
     {l: 'GP 2569 (Base)', v: f1(T.gp[i69]), u: 'MB'},
-    {l: `GP ${LAST}`, v: f1(T.gp[iL]), u: 'MB', s: `CAGR 70–76: ${pct(cagr(T.gp[i70], T.gp[iL], LAST - FIRST_FC))}`},
+    {l: `GP ${LAST}`, v: f1(T.gp[iL]), u: 'MB', s: `CAGR ${YR2}: ${pct(cagr(T.gp[i70], T.gp[iL], LAST - FIRST_FC))}`},
     {l: `%GP ${LAST}`, v: pct(T.gp[iL] / T.po[iL] * 100), s: `2569: ${pct(T.gp[i69] / T.po[i69] * 100)}`},
   ]);
   document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product 2566–${LAST}`;
@@ -353,7 +377,7 @@ function renderNpd() {
     {l: 'NPD PO 2570', v: f1(tp[1]), u: 'MB'},
     {l: `NPD PO ${LAST}`, v: f1(tp[L]), u: 'MB', s: `สูงสุด: ${FC_YEARS[peak]} (${f1(tp[peak])} MB)`},
     {l: `NPD GP ${LAST}`, v: f1(tg[L]), u: 'MB', s: `%GP ${pct(tg[L] / tp[L] * 100)}`},
-    {l: 'NPD PO รวม 2570–2576', v: f1(sum(tp.slice(1))), u: 'MB', s: `GP รวม ${f1(sum(tg.slice(1)))} MB`},
+    {l: `NPD PO รวม ${YR}`, v: f1(sum(tp.slice(1))), u: 'MB', s: `GP รวม ${f1(sum(tg.slice(1)))} MB`},
     {l: 'จำนวน Product Type (New)', v: types, u: 'รายการ', s: 'ที่มียอดอย่างน้อย 1 ปี'},
   ]);
   document.getElementById('npd-title').textContent = `NPD ${METRIC_NAME[m]} by Core Product 2569–${LAST}`;
@@ -416,6 +440,12 @@ function renderInc() {
 }
 document.querySelectorAll('#tab-inc input').forEach(i => i.oninput = renderInc);
 
+// ── Forecasting Methodology popup ───────────────────────────
+const dlg = document.getElementById('method-dlg');
+document.getElementById('method-open').onclick = () => dlg.showModal();
+document.getElementById('method-close').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
 // ── Wiring ───────────────────────────────────────────────────
 const RENDER = {omni: renderOmni, npd: renderNpd, channel: renderChannel, inc: renderInc};
 let current = 'omni';
@@ -432,6 +462,8 @@ document.querySelectorAll('.seg').forEach(seg => seg.querySelectorAll('button').
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RENDER[current]());
 new MutationObserver(() => RENDER[current]()).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
 
+document.querySelectorAll('.yr').forEach(e => e.textContent = YR);
+document.querySelectorAll('.last').forEach(e => e.textContent = LAST);
 document.getElementById('srcline').textContent = `PDEM · Omni Channel (Responsible section PEM105) · PO Receive & GP · ปี 2566–${LAST} · ที่มา: ${DATA.source}`;
 document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ Q (PO Receive) และ R (GP) · ${DATA.rows.toLocaleString()} แถว · ปี 2566–2568 เป็นยอด Actual จาก Dashboard เดิม (Omni_Forcast_Data_2573_adj.xlsx) · PDEM Confidential`;
 let start = 'omni';
