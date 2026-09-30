@@ -125,14 +125,14 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
   <div class="kpis" id="omni-kpis"></div>
   <div class="grid2">
     <div class="card">
-      <div class="card-head"><div><h2 id="omni-title"></h2><div class="sub">ล้านบาท (MB) · 2566–2568 Actual · 2569 Base · <span class="yr"></span> Forecast</div></div>
+      <div class="card-head"><div><h2 id="omni-title"></h2><div class="sub">ล้านบาท (MB) · <span class="hist"></span> Actual · 2569 Base · <span class="yr"></span> Forecast</div></div>
         <div class="seg" data-metric="omni"><button aria-pressed="true" data-m="po">PO Receive</button><button aria-pressed="false" data-m="gp">GP</button></div></div>
       <div class="chart"><canvas id="omni-bar"></canvas></div><div class="legend" id="omni-legend"></div>
     </div>
     <div class="card"><h2>%GP Margin</h2><div class="sub">GP ÷ PO Receive</div><div class="chart"><canvas id="omni-gpm"></canvas></div></div>
   </div>
   <div class="card">
-    <h2 id="omni-tbl-title"></h2><div class="sub">คลิกชื่อกลุ่มเพื่อดู Product Category · 2566–2568 มีเฉพาะระดับกลุ่ม</div>
+    <h2 id="omni-tbl-title"></h2><div class="sub">คลิกชื่อกลุ่มเพื่อดู Product Category · <span class="hist"></span> มีเฉพาะระดับกลุ่ม (ปรับยอดรวมตามตัวเลข Actual ล่าสุด)</div>
     <div class="tools"><button class="btn" data-expand="omni">ขยายทั้งหมด</button><button class="btn" data-collapse="omni">ย่อทั้งหมด</button></div>
     <div class="tbl-wrap"><table id="omni-tbl"></table></div>
   </div>
@@ -198,9 +198,10 @@ footer{color:var(--faint);font-size:12px;margin-top:24px}
 
 <script>
 const DATA = /*__DATA__*/null;
-const LAST = 2573, FIRST_FC = 2570;                          // show B.E. 2566-LAST (data runs to 2576)
-const YEARS = Array.from({length: LAST - 2566 + 1}, (_, i) => 2566 + i);
-const FC_YEARS = YEARS.slice(3);                             // 2569-LAST
+const FIRST = 2567, BASE = 2569, LAST = 2573, FIRST_FC = 2570; // show B.E. FIRST-LAST (data runs to 2576)
+const YEARS = Array.from({length: LAST - FIRST + 1}, (_, i) => FIRST + i);
+const BI = BASE - FIRST;                                     // index of base year in YEARS
+const FC_YEARS = YEARS.slice(BI);                            // BASE-LAST
 const cut = (x, n) => { x.po = x.po.slice(0, n); x.gp = x.gp.slice(0, n); };
 DATA.omni.forEach(g => { cut(g, YEARS.length); g.children.forEach(c => cut(c, FC_YEARS.length)); });
 [...DATA.npd, ...DATA.channel].forEach(g => { cut(g, FC_YEARS.length); g.children.forEach(c => cut(c, FC_YEARS.length)); });
@@ -349,7 +350,7 @@ document.querySelectorAll('[data-expand],[data-collapse]').forEach(b => b.onclic
 const omniTot = {po: YEARS.map((_, i) => sum(DATA.omni.map(g => g.po[i]))), gp: YEARS.map((_, i) => sum(DATA.omni.map(g => g.gp[i])))};
 const omniCM = colorMap(DATA.omni.map(g => ({...g, po: g.po})));
 function renderOmni() {
-  const m = state.omni, T = omniTot, i69 = 3, i70 = 4, iL = YEARS.length - 1;
+  const m = state.omni, T = omniTot, i69 = BI, i70 = BI + 1, iL = YEARS.length - 1;
   kpis('omni-kpis', [
     {l: 'PO Receive 2569 (Base)', v: f1(T.po[i69]), u: 'MB'},
     {l: `PO Receive ${LAST}`, v: f1(T.po[iL]), u: 'MB', s: `เทียบ 2569: ${cagrHtml((T.po[iL] / T.po[i69] - 1) * 100)}`},
@@ -358,10 +359,10 @@ function renderOmni() {
     {l: `GP ${LAST}`, v: f1(T.gp[iL]), u: 'MB', s: `CAGR ${YR2}: ${pct(cagr(T.gp[i70], T.gp[iL], LAST - FIRST_FC))}`},
     {l: `%GP ${LAST}`, v: pct(T.gp[iL] / T.po[iL] * 100), s: `2569: ${pct(T.gp[i69] / T.po[i69] * 100)}`},
   ]);
-  document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product 2566–${LAST}`;
-  document.getElementById('omni-tbl-title').textContent = `${METRIC_NAME[m]} by Core Product 2566–${LAST} (MB)`;
-  stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: 4, legendId: 'omni-legend'});
-  lineChart('omni-gpm', YEARS, [{name: '%GP', data: T.po.map((v, i) => v ? T.gp[i] / v * 100 : null), color: '--s1'}], {divider: 4});
+  document.getElementById('omni-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST}`;
+  document.getElementById('omni-tbl-title').textContent = `${METRIC_NAME[m]} by Core Product ${FIRST}–${LAST} (MB)`;
+  stackedBar('omni-bar', YEARS, stackSeries(DATA.omni, m, omniCM), {divider: BI + 1, legendId: 'omni-legend'});
+  lineChart('omni-gpm', YEARS, [{name: '%GP', data: T.po.map((v, i) => v ? T.gp[i] / v * 100 : null), color: '--s1'}], {divider: BI + 1});
   table('omni-tbl', DATA.omni, YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Category'});
 }
 
@@ -383,7 +384,7 @@ function renderNpd() {
   document.getElementById('npd-title').textContent = `NPD ${METRIC_NAME[m]} by Core Product 2569–${LAST}`;
   document.getElementById('npd-tbl-title').textContent = `NPD ${METRIC_NAME[m]} by Core Product 2569–${LAST} (MB)`;
   stackedBar('npd-bar', FC_YEARS, stackSeries(DATA.npd, m, npdCM), {divider: 1, legendId: 'npd-legend'});
-  lineChart('npd-share', FC_YEARS, [{name: 'NPD share', data: tp.map((v, i) => omniTot.po[i + 3] ? v / omniTot.po[i + 3] * 100 : null), color: '--s2'}], {divider: 1, min: 0});
+  lineChart('npd-share', FC_YEARS, [{name: 'NPD share', data: tp.map((v, i) => omniTot.po[i + BI] ? v / omniTot.po[i + BI] * 100 : null), color: '--s2'}], {divider: 1, min: 0});
   table('npd-tbl', DATA.npd, FC_YEARS, m, {firstFc: FIRST_FC, cagrFrom: FIRST_FC, childLabel: 'Core Product / Product Type'});
 }
 
@@ -413,7 +414,7 @@ function renderChannel() {
 function renderInc() {
   const num = id => Math.max(0, parseFloat(document.getElementById(id).value) || 0);
   const base = num('inc-base'), add = num('inc-add'), rv = num('inc-rev'), gv = num('inc-gp'), m = state.inc;
-  const bp = omniTot.po.slice(3), bg = omniTot.gp.slice(3);
+  const bp = omniTot.po.slice(BI), bg = omniTot.gp.slice(BI);
   const newM = FC_YEARS.map((_, i) => add * i);
   const ip = newM.map(n => n * rv), ig = newM.map(n => n * gv);
   const L = FC_YEARS.length - 1;
@@ -463,9 +464,10 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => REND
 new MutationObserver(() => RENDER[current]()).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
 
 document.querySelectorAll('.yr').forEach(e => e.textContent = YR);
+document.querySelectorAll('.hist').forEach(e => e.textContent = `${FIRST}–${BASE - 1}`);
 document.querySelectorAll('.last').forEach(e => e.textContent = LAST);
-document.getElementById('srcline').textContent = `PDEM · Omni Channel (Responsible section PEM105) · PO Receive & GP · ปี 2566–${LAST} · ที่มา: ${DATA.source}`;
-document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ Q (PO Receive) และ R (GP) · ${DATA.rows.toLocaleString()} แถว · ปี 2566–2568 เป็นยอด Actual จาก Dashboard เดิม (Omni_Forcast_Data_2573_adj.xlsx) · PDEM Confidential`;
+document.getElementById('srcline').textContent = `PDEM · Omni Channel (Responsible section PEM105) · PO Receive & GP · ปี ${FIRST}–${LAST} · ที่มา: ${DATA.source}`;
+document.getElementById('footer').innerHTML = `ที่มา: ${DATA.source} · ชีท "Revenue _ R.1" · Revenue Stream Type = 2. Omni Channel · Responsible section / Person = PEM105 · ใช้คอลัมน์ Q (PO Receive) และ R (GP) · ${DATA.rows.toLocaleString()} แถว · ปี ${FIRST}–${BASE - 1} เป็นยอด Actual (รวม: 2567 = 955 / GP 318, 2568 = 870 / GP 317 MB) แยกกลุ่มตามสัดส่วนจาก Dashboard เดิม · PDEM Confidential`;
 let start = 'omni';
 try { start = localStorage.getItem('omni-tab') || 'omni'; } catch (e) {}
 (document.querySelector(`.tabs button[data-tab="${start}"]`) || document.querySelector('.tabs button')).click();

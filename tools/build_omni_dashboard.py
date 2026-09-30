@@ -74,6 +74,23 @@ HISTORY = {
     "Surge Arresters": ([98.0, 87.19, 89.53], [46.05, 45.9, 44.61]),
     "Others": ([20.45, 11.52, 1.67], [6.32, 2.42, 0.64]),
 }
+# Actual totals (MB) that override the history above; each group is scaled
+# pro rata so the stacked chart still sums to the given total.
+# B.E. 2566 (2023) is dropped. {B.E. year: (PO/Revenue, GP)}
+HISTORY_YEARS = [2567, 2568]
+HISTORY_TOTALS = {2567: (955.0, 318.0), 2568: (870.0, 317.0)}
+
+
+def scaled_history():
+    out = {g: ([], []) for g in HISTORY}
+    for k, year in enumerate(HISTORY_YEARS):
+        i = year - 2566
+        for m in (0, 1):
+            tot = sum(v[m][i] for v in HISTORY.values())
+            f = HISTORY_TOTALS[year][m] / tot if year in HISTORY_TOTALS else 1.0
+            for g, v in HISTORY.items():
+                out[g][m].append(round(v[m][i] * f, 4))
+    return out
 
 
 def clean(s):
@@ -127,9 +144,10 @@ def main(path):
     def children(sub):
         return [{"name": k, **rounded(v)} for k, v in sorted(sub.items())]
 
-    omni = []
+    omni, hist_all = [], scaled_history()
+    nh = len(HISTORY_YEARS)
     for g in sorted(set(groups) | set(HISTORY)):
-        hist = HISTORY.get(g, ([0.0] * 3, [0.0] * 3))
+        hist = hist_all.get(g, ([0.0] * nh, [0.0] * nh))
         cur = rounded(groups[g]) if g in groups else {"po": [0.0] * 8, "gp": [0.0] * 8}
         omni.append({"name": g, "po": hist[0] + cur["po"], "gp": hist[1] + cur["gp"],
                      "children": children(cats[g]) if g in cats else []})
@@ -147,9 +165,10 @@ def main(path):
             .replace("__METHOD_IMG__", img))
     OUT.write_text(html, encoding="utf-8")
 
-    tot = [sum(g["po"][i] for g in omni) for i in range(11)]
+    n = len(omni[0]["po"])
     print(f"{len(rows)} rows -> {OUT.name}")
-    print("PO total B.E. 2566-2576:", [round(v, 1) for v in tot])
+    print(f"PO total B.E. {HISTORY_YEARS[0]}-2576:", [round(sum(g["po"][i] for g in omni), 1) for i in range(n)])
+    print(f"GP total B.E. {HISTORY_YEARS[0]}-2576:", [round(sum(g["gp"][i] for g in omni), 1) for i in range(n)])
 
 
 if __name__ == "__main__":
