@@ -106,6 +106,11 @@ table.tgt tr.sum td{background:var(--bg);border-top:2px solid var(--ink);border-
 .ap h3{font-size:17px;color:var(--ac)}
 .ap p{color:var(--ink);opacity:.85}
 .ap .more{color:var(--ac)}
+.ap{position:relative}
+.ap-go{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--ac);color:var(--surface);transition:transform .15s}
+.ap-go:hover{transform:translate(1px,-1px)}
+.ap-go:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.ap-go{transition:none}}
 .ksf{background:var(--ink);color:var(--bg);border-radius:14px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;align-items:center}
 .ksf q{font-size:22px;font-weight:700;line-height:1.4;quotes:"“" "”"}
 .ksf p{font-size:14px;opacity:.85}
@@ -401,6 +406,7 @@ footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);paddin
   <div class="appr">
     <div class="card ap ap1">
       <span class="tag">A1 · Forecast</span>
+      <a class="ap-go" href="https://claude.ai/artifact/8X8Sc1kSgXjF19rfVaNUHj" target="_blank" rel="noopener" aria-label="เปิดรายละเอียด Sale Forecasting" title="เปิดรายละเอียด Sale Forecasting"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <h3>Sale Forecasting จากข้อมูลย้อนหลัง</h3>
       <p>ใช้ข้อมูลขาย/PO ย้อนหลังคาดการณ์ Demand แล้วส่งให้ Chase Sale Operation วาง Stock ล่วงหน้า</p>
     </div>
